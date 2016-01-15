@@ -9,5 +9,5 @@ from . import main
 
 @main.route('/')
 @login_required
-def hello_world():
+def index():
     return 'Hello World!'

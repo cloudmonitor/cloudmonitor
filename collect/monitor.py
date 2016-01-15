@@ -6,22 +6,21 @@ import types
 
 # 常量
 TOKEN_URL = 'http://192.168.0.170:5000/v2.0/tokens'
-USER_PWD = '{"auth": {"tenantName": "%s", "passwordCredentials": {"username": "%s", "password": "%s"}}}'
+CREDENTIAL = '{"auth": {"tenantName": "%s", "passwordCredentials": {"username": "%s", "password": "%s"}}}'
 TENANT_URL = 'http://192.168.0.170:5000/v2.0/tenants'
 TENANT_VM_URL = 'http://192.168.0.170:8774/v2/{tenant_id}/servers'
 CEILOMETER_RESOURCE_URL = 'http://192.168.0.170:8777/v2/resources'
 CEILOMETER_METER_SAMPLE = 'http://192.168.0.170:8777/v2/meters/{meter_name}'
 
 
-
 def get_token(tenant_name, username, password):
     """获取指定用户名密码的TOKEN,返回TOKEN值"""
-    user_pwd = str(USER_PWD) % (tenant_name, username, password)
+    user_pwd = str(CREDENTIAL) % (tenant_name, username, password)
     params = json.dumps(eval(user_pwd))
     headers = {"Content-type": "application/json", "Accept": "application/json"}
     r = requests.post(TOKEN_URL, data=params, headers=headers)
     resjson = r.json()
-    return resjson["access"]["token"]["id"]
+    return resjson
 
 
 def get_tenants(token):
