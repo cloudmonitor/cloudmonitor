@@ -1,12 +1,12 @@
-from flask import Flask
+# _*_ coding:utf-8 _*_
 
-app = Flask(__name__)
+from flask.ext.script import Manager
 
+from app import create_app
 
-@app.route('/')
-def hello_world():
-    return 'Hello World!'
+app = create_app()
+manager = Manager(app)
 
 
 if __name__ == '__main__':
-    app.run()
+    manager.run()
