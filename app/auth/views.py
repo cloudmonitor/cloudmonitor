@@ -7,4 +7,4 @@ from . import auth
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
-    pass
+    return "login"
