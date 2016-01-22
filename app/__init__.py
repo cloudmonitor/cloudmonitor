@@ -2,21 +2,20 @@
 
 
 from flask import Flask
-from flask.ext.login import LoginManager
+# from flask.ext.login import LoginManager
 from flask.ext.bootstrap import Bootstrap
 
-login_manager = LoginManager()
-login_manager.session_protection = 'strong'
-login_manager.login_view = 'auth.login'
-login_manager.login_message = None
+# login_manager = LoginManager()
+# login_manager.session_protection = 'strong'
+# login_manager.login_view = 'auth.login'
+# login_manager.login_message = None
 bootstrap = Bootstrap()
-
 
 
 def create_app():
     app = Flask(__name__)
     app.config["SECRET_KEY"] = "try to guess"
-    login_manager.init_app(app)
+    # login_manager.init_app(app)
     bootstrap.init_app(app)
 
     from .main import main as main_blueprint
