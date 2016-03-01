@@ -6,12 +6,13 @@ import types
 
 # 常量
 
-CREDENTIAL = '{"auth": {"tenantName": "%s", "passwordCredentials": {"username": "%s", "password": "%s"}}}'
+CREDENTIAL_PASSWORD = '{"auth": {"tenantName": "%s", "passwordCredentials": {"username": "%s", "password": "%s"}}}'
+CREDENTIAL_TOKEN = '{"auth":{"tenantName":"%s","token":{"id":"%s"}}}'
 
 CEILOMETER_METER_SAMPLE = 'http://192.168.0.170:8777/v2/meters/{meter_name}'
 
 KEYSTONE_ENDPOINT = 'http://controller:5000/v2.0'
-GLANCE_ENDPOINT = 'http://controller:9292/v2/'
+GLANCE_ENDPOINT = 'http://controller:9292/v2'
 NOVA_ENDPOINT = 'http://controller:8774/v2/{tenant_id}'
 NEUTRON_ENDPOINT = 'http://controller:9696/v2.0'
 CEILOMETER_ENDPOINT = 'http://controller:8777/v2'
@@ -19,58 +20,23 @@ CEILOMETER_ENDPOINT = 'http://controller:8777/v2'
 
 def get_user_token(username, password):
     """获取指定用户名密码的TOKEN,返回json"""
-    user_pwd = str(CREDENTIAL) % ('', username, password)
-    params = json.dumps(eval(user_pwd))
+    credential = CREDENTIAL_PASSWORD % ('', username, password)
     headers = {"Content-type": "application/json", "Accept": "application/json"}
-    r = requests.post(KEYSTONE_ENDPOINT+'/tokens', data=params, headers=headers)
+    r = requests.post(KEYSTONE_ENDPOINT+'/tokens', data=credential, headers=headers)
     return r.json()
 
 
-def get_tenant_token(tenant_name, username, password):
+def get_tenant_token(tenantname, token):
     """获取指定租户、用户名、密码的TOKEN,返回json"""
-    user_pwd = str(CREDENTIAL) % (tenant_name, username, password)
-    params = json.dumps(eval(user_pwd))
+    credential = CREDENTIAL_TOKEN % (tenantname, token)
     headers = {"Content-type": "application/json", "Accept": "application/json"}
-    r = requests.post(KEYSTONE_ENDPOINT+'/tokens', data=params, headers=headers)
+    r = requests.post(KEYSTONE_ENDPOINT+'/tokens', data=credential, headers=headers)
     response_json = r.json()
     return response_json
 
 
-# def _set_service_endpoint(token_json):
-#     """设置相应服务的endpoint"""
-#     for endpoint in token_json['access']['serviceCatalog']:
-#         if endpoint['name'] == 'nova':
-#             NOVA_ENDPOINT = endpoint['endpoints'][0]['publicURL']
-#         elif endpoint['name'] == 'glance':
-#             GLANCE_ENDPOINT = endpoint['endpoints'][0]['publicURL']
-#         elif endpoint['name'] == 'neutron':
-#             NEUTRON_ENDPOINT = endpoint['endpoints'][0]['publicURL']
-#         elif endpoint['name'] == 'ceilometer':
-#             CEILOMETER_ENDPOINT = endpoint['endpoints'][0]['publicURL']
-#         else:
-#             pass
-
-
 def get_tenants(token_id):
-    """获取指定TOKEN下的所有租户，返回一个租户字典,通过['tenants'][0 1 ... n]['id']取得租户id,返回样例如下
-        {
-          "tenants_links": [],
-          "tenants": [
-            {
-              "description": "tenant01 testing",
-              "enabled": true,
-              "id": "e74268a4e2f84bf9bf280e252d1c158e",
-              "name": "tenant01"
-            },
-            {
-              "description": "tenant02",
-              "enabled": true,
-              "id": "fa77ba26908b4f1baefed7c2ae8a63ef",
-              "name": "tenant02"
-            }
-          ]
-        }
-    """
+    """获取指定TOKEN下的所有租户，返回一个租户字典,通过['tenants'][0 1 ... n]['id']取得租户id,返回样例如下"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     r = requests.get(KEYSTONE_ENDPOINT+'/tenants', headers=headers)
     return r.json()
