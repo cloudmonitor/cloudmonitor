@@ -10,7 +10,9 @@ from ..decorators import login_required, allow_cross_domain
 from . import main
 from ..models import User
 from collect.monitor import get_tenant_token, get_tenants, get_tenant_instances, get_tenant_instance, get_tenant_resources,\
-                            get_tenant_instance_meter, get_tenant_limits, get_user_token
+                            get_tenant_instance_meter, get_tenant_limits, get_user_token, get_tenant_flavors, \
+                            get_tenant_networks, get_tenant_subnets, get_tenant_routers
+
 
 
 @main.route('/login', methods=['POST'])
@@ -27,7 +29,6 @@ def login():
 @main.route('/tenants')
 def front_get_tenants():
     token = json.loads(request.args.get('token'))
-    print token
     tenants_json = get_tenants(token['id'])
     return json.dumps(tenants_json)
 
@@ -48,39 +49,57 @@ def front_get_tenant_limits():
     return json.dumps(limits_json)
 
 
-@main.route('/')
-def index():
-    user = session.get('log_user')
-    tenants_json = get_tenants(user['token_id'])
-    token_json = get_tenant_token(tenants_json['tenants'][0]['name'], user['username'], session.get('log_pwd'))
-    user = User(token_json)
-    session['log_user'] = user.to_json()
-    return render_template('index.html')
-
-
 @main.route('/instances')
 def front_get_tenant_instances():
-    user = session.get('log_user')
-    vms_json = get_tenant_instances(user['token_id'], user['tenant_id'])
+    token = json.loads(request.args.get('token'))
+    vms_json = get_tenant_instances(token['id'], token['tenant']['id'])
     return json.dumps(vms_json)
+
+
+@main.route('/flavors')
+def front_get_tenant_flavors():
+    token = json.loads(request.args.get('token'))
+    flavors_json = get_tenant_flavors(token['id'], token['tenant']['id'])
+    return json.dumps(flavors_json)
 
 
 @main.route('/instances/<instance_id>')
 def front_get_tenant_instance(instance_id):
-    user = session.get('log_user')
-    vm_json = get_tenant_instance(user['token_id'], user['tenant_id'], instance_id)
+    token = json.loads(request.args.get('token'))
+    vm_json = get_tenant_instance(token['id'], token['tenant']['id'], instance_id)
     return json.dumps(vm_json)
+
+
+@main.route('/networks')
+def front_get_tenant_networks():
+    token = json.loads(request.args.get('token'))
+    networks_json = get_tenant_networks(token['id'])
+    return json.dumps(networks_json)
+
+
+@main.route('/subnets')
+def front_get_tenant_subnets():
+    token = json.loads(request.args.get('token'))
+    subnets_json = get_tenant_subnets(token['id'])
+    return json.dumps(subnets_json)
+
+
+@main.route('/routers')
+def front_get_tenant_routers():
+    token = json.loads(request.args.get('token'))
+    routers_json = get_tenant_routers(token['id'])
+    return json.dumps(routers_json)
 
 
 @main.route('/resources')
 def front_get_tenant_resources():
-    user = session.get('log_user')
-    resources_json = get_tenant_resources(user['token_id'])
+    token = json.loads(request.args.get('token'))
+    resources_json = get_tenant_resources(token['id'])
     return json.dumps(resources_json)
 
 
 @main.route('/meters/<instance_id>/<meter_name>')
 def front_get_tenant_vm_meters(instance_id, meter_name):
-    user = session.get('log_user')
-    meter_json = get_tenant_instance_meter(user['token_id'], instance_id, meter_name)
+    token = json.loads(request.args.get('token'))
+    meter_json = get_tenant_instance_meter(token['id'], instance_id, meter_name)
     return json.dumps(meter_json)
