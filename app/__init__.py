@@ -19,8 +19,6 @@ def create_app():
     # login_manager.init_app(app)
     cors.init_app(app)
 
-    print app.root_path
-
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
 

@@ -1,23 +1,15 @@
 # _*_ coding:utf-8 _*_
 
-from flask import Flask, session, render_template, request
-# from flask.ext.login import login_required
+from flask import request
 import json
 
-from ..decorators import login_required, allow_cross_domain
-
-
 from . import main
-from ..models import User
-from collect.monitor import get_tenant_token, get_tenants, get_tenant_instances, get_tenant_instance, get_tenant_resources,\
-                            get_tenant_instance_meter, get_tenant_limits, get_user_token, get_tenant_flavors, \
-                            get_tenant_networks, get_tenant_subnets, get_tenant_routers,get_one_firewalls_info,get_all_rules, \
-                            get_all_policies, get_all_firewalls_info, get_floatingips, get_security_groups,get_port_all_info,get_all_policies, \
-                            get_all_rules,get_list_meter_minute,get_instance_network_resource_id,get_meter_func_data,get_tuopu_info
-
-
-
-
+from collect.monitor import get_tenant_token, get_tenants, get_tenant_instances, get_tenant_instance,\
+                            get_tenant_limits, get_user_token, get_tenant_flavors, \
+                            get_tenant_networks, get_tenant_subnets, get_tenant_routers, get_one_firewalls_info,\
+                            get_all_rules, get_all_policies, get_all_firewalls_info, get_floatingips,\
+                            get_security_groups, get_port_all_info, get_all_policies, get_all_rules, \
+                            get_meter_func_data, get_tuopu_info
 
 
 @main.route('/login', methods=['POST'])
@@ -47,7 +39,6 @@ def front_get_tenant_token():
 
 
 @main.route('/limits')
-@allow_cross_domain
 def front_get_tenant_limits():
     token = json.loads(request.args.get('token'))
     limits_json = get_tenant_limits(token['id'], token['tenant']['id'])
@@ -94,20 +85,6 @@ def front_get_tenant_routers():
     token = json.loads(request.args.get('token'))
     routers_json = get_tenant_routers(token['id'])
     return json.dumps(routers_json)
-
-
-@main.route('/resources')
-def front_get_tenant_resources():
-    token = json.loads(request.args.get('token'))
-    resources_json = get_tenant_resources(token['id'])
-    return json.dumps(resources_json)
-
-
-@main.route('/meters/<instance_id>/<meter_name>')
-def front_get_tenant_vm_meters(instance_id, meter_name):
-    token = json.loads(request.args.get('token'))
-    meter_json = get_tenant_instance_meter(token['id'], instance_id, meter_name)
-    return json.dumps(meter_json)
 
 
 @main.route('/floatingips')
@@ -173,28 +150,12 @@ def get_rules_info():
     return json.dumps(rules_info)
 
 
-@main.route('/monitor/<instance_id>/cpu_util')
-def get_monitor_cpu_util(instance_id):
-    token = json.loads(request.args.get('token'))
-    cpu_util_info = get_list_meter_minute(token['id'],'cpu_util',instance_id)
-    return json.dumps(cpu_util_info)
-
-
 @main.route('/monitor/<instance_id>/<meter_name>/<type>')
 def get_monitor_network(instance_id,meter_name, type):
     token = json.loads(request.args.get('token'))
     r = get_meter_func_data(token['id'],instance_id, meter_name,type)
     # monitor_network_outgoing = get_list_meter_minute(token['id'],"network.outgoing.bytes.rate",resource_id)
     # r = {"monitor_network_incoming":monitor_network_incoming,"monitor_network_outgoing":monitor_network_outgoing}
-    return json.dumps(r)
-
-
-@main.route('/monitor/<instance_id>/disk_info')
-def get_disk_info(instance_id):
-    token = json.loads(request.args.get('token'))
-    disk_read_rate = get_list_meter_minute(token['id'],"disk.read.bytes.rate",instance_id)
-    disk_write_rate = get_list_meter_minute(token['id'],"disk.write.bytes.rate",instance_id)
-    r = dict(disk_read_rate, **disk_write_rate)
     return json.dumps(r)
 
 
