@@ -9,16 +9,13 @@ from collect.monitor import get_tenant_token, get_tenants, get_tenant_instances,
                             get_tenant_networks, get_tenant_subnets, get_tenant_routers, get_one_firewalls_info,\
                             get_all_rules, get_all_policies, get_all_firewalls_info, get_floatingips,\
                             get_security_groups, get_port_all_info, get_all_policies, get_all_rules, \
-                            get_meter_func_data, get_tuopu_info
+                            get_meter_func_data, get_tuopu_info, create_fw_rule, delete_fw_rule, update_fw_rule
 
 
 @main.route('/login', methods=['POST'])
 def login():
-    # print "hello"
-    # print request.form.get('data')
-    data = json.loads(request.form.get('data'))
-    username = data['username']
-    password = data['password']
+    username = request.json.get('username')
+    password = request.json.get('password')
     token_json = get_user_token(username, password)
     return json.dumps(token_json)
 
@@ -109,10 +106,35 @@ def get_all_firewall():
 
 
 @main.route('/firewall_rules')
-def get_all_rule():
+def get_fw_rules():
     token = json.loads(request.args.get('token'))
     rule_json = get_all_rules(token['id'])
     return json.dumps(rule_json)
+
+
+@main.route('/firewall_rules/create', methods=["POST"])
+def create_firewall_rule():
+    token = json.loads(request.args.get('token'))
+    rule = request.json
+    rule_json = create_fw_rule(token['id'], rule)
+    return json.dumps(rule_json)
+
+
+@main.route('/firewall_rules/delete')
+def delete_firewall_rule():
+    token = json.loads(request.args.get('token'))
+    rule_id_list = json.loads(request.args.get('fw_rule_id_list'))
+    rule_delete_json = delete_fw_rule(token['id'], rule_id_list)
+    return json.dumps(rule_delete_json)
+
+
+@main.route('/firewall_rules/update')
+def update_firewall_rule():
+    token = json.loads(request.args.get('token'))
+    rule = request.args.get('fw_rule')
+    rule_json = update_fw_rule(token['id'], rule)
+    return json.dumps(rule_json)
+
 
 
 @main.route('/firewall_policies')
@@ -129,33 +151,10 @@ def get_firewall_info(firewall_id):
     return json.dumps(firewall_info_json)
 
 
-@main.route('/ports')
-def get_ports_info():
-    token = json.loads(request.args.get('token'))
-    ports_info_json = get_port_all_info(token['id'])
-    return json.dumps(ports_info_json)
-
-
-@main.route('/policy')
-def get_policy_info():
-    token = json.loads(request.args.get('token'))
-    policy_info_json = get_all_policies(token['id'])
-    return json.dumps(policy_info_json)
-
-
-@main.route('/rules')
-def get_rules_info():
-    token = json.loads(request.args.get('token'))
-    rules_info = get_all_rules(token['id'])
-    return json.dumps(rules_info)
-
-
 @main.route('/monitor/<instance_id>/<meter_name>/<type>')
 def get_monitor_network(instance_id,meter_name, type):
     token = json.loads(request.args.get('token'))
-    r = get_meter_func_data(token['id'],instance_id, meter_name,type)
-    # monitor_network_outgoing = get_list_meter_minute(token['id'],"network.outgoing.bytes.rate",resource_id)
-    # r = {"monitor_network_incoming":monitor_network_incoming,"monitor_network_outgoing":monitor_network_outgoing}
+    r = get_meter_func_data(token['id'], instance_id, meter_name,type)
     return json.dumps(r)
 
 

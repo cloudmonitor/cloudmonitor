@@ -194,7 +194,7 @@ def get_all_policies(token_id):
     """获取所有的policys的信息"""
     headers = {"X-Auth-Token": token_id, "Accept": "application/json"}
     url = NEUTRON_ENDPOINT + '/fw/firewall_policies'
-    r = requests.get(url= url, headers= headers)
+    r = requests.get(url=url, headers=headers)
     return r.json()
 
 
@@ -202,9 +202,35 @@ def get_all_rules(token_id):
     """获取所有的rule的信息"""
     headers = {"X-Auth-Token": token_id, "Accept": "application/json"}
     url = NEUTRON_ENDPOINT + '/fw/firewall_rules'
-    r = requests.get(url= url, headers= headers)
+    r = requests.get(url=url, headers=headers)
     return r.json()
 
+
+def create_fw_rule(token_id, rule):
+    """创建防火墙规则"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = NEUTRON_ENDPOINT + '/fw/firewall_rules'
+    r = requests.post(url=url, data=json.dumps(rule), headers=headers)
+    return r.json()
+
+
+def delete_fw_rule(token_id, rule_id_list):
+    """创建防火墙规则"""
+    delete_status = {}
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    for i in range(len(rule_id_list["firewall_rule_ids"])):
+        url = NEUTRON_ENDPOINT + '/fw/firewall_rules/' + rule_id_list["firewall_rule_ids"][i]
+        r = requests.delete(url=url, headers=headers)
+        delete_status[rule_id_list["firewall_rule_ids"][i]] = r.status_code
+    return delete_status
+
+
+def update_fw_rule(token_id, rule, fw_rule_id):
+    """创建防火墙规则"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = NEUTRON_ENDPOINT + '/fw/firewall_rules/' + fw_rule_id
+    r = requests.put(url=url, data=rule, headers=headers)
+    return r.json()
 
 def get_localtime():
     """获取当前时间"""
@@ -213,13 +239,13 @@ def get_localtime():
     return total_time
 
 
-def Time2ISOString(s):
+def time_to_isostring(s):
     """把一个时间转换成秒"""
     d = datetime.datetime.strptime(s,"%Y-%m-%d %H:%M:%S")
     return time.mktime(d.timetuple())
 
 
-def ISOString2Time(s):
+def isostring_to_time(s):
     """把秒数转换成一个时间"""
     return time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(float(s)))
 
@@ -245,18 +271,18 @@ def get_instance_resource_id(token_id, instance_id, meter_name):
                 return resource['resource_id']
 
 
-def localtime2UTC(s):
-    seconds = int(Time2ISOString(s))-28800
-    return ISOString2Time(seconds)
+def localtime_to_utc(s):
+    seconds = int(time_to_isostring(s))-28800
+    return isostring_to_time(seconds)
 
 
 def get_one_meter(token_id, time, meter_name ,resource_id ):
     """根据时间来删选数据"""
-    Time_reduce = ISOString2Time(Time2ISOString(time)-60)
+    time_reduce = isostring_to_time(time_to_isostring(time)-60)
     headers = {"X-Auth-Token":token_id, "Accept": "application/json"}
     url = CEILOMETER_ENDPOINT + '/meters/'+meter_name+'/?'
-    url_list = [url,]
-    payload = {"q": [{"field": "timestamp", "op": "gt", "value": Time_reduce},
+    url_list = [url, ]
+    payload = {"q": [{"field": "timestamp", "op": "gt", "value": time_reduce},
                      {"field": "timestamp", "op": "lt", "value": time},
                      {"field": "resource_id","value": resource_id}
                     ]}
@@ -269,15 +295,13 @@ def get_one_meter(token_id, time, meter_name ,resource_id ):
             url_list.append(key+'='+str(value)+'&')
     url_list.append("limit=1")
     url = ''.join(url_list)
-    # print url
     r = requests.get(url, headers=headers)
-    #print r.json()
     return r.json()
 
 
 def get_list_meter_minute(token_id, meter_name, resource_id):
     """以分钟得到某一组数据"""
-    localtime = localtime2UTC(get_localtime())
+    localtime = localtime_to_utc(get_localtime())
     meter_info_list = []
     for i in range(0, 7):
         r = get_one_meter(token_id, localtime, meter_name, resource_id)
@@ -286,7 +310,7 @@ def get_list_meter_minute(token_id, meter_name, resource_id):
             meter_info_list.append(r)
         else:
             meter_info_list.append(r[0])
-        localtime = ISOString2Time(Time2ISOString(localtime)-180)
+        localtime = isostring_to_time(time_to_isostring(localtime)-180)
     r = {meter_name:meter_info_list}
 
     return r
@@ -294,7 +318,7 @@ def get_list_meter_minute(token_id, meter_name, resource_id):
 
 def get_list_meter_hour(token_id,meter_name, resource_id):
     """以小时得到某一组数据"""
-    localtime = localtime2UTC(get_localtime())
+    localtime = localtime_to_utc(get_localtime())
     meter_info_list = []
     for i in range(0, 7):
         r = get_one_meter(token_id, localtime, meter_name, resource_id)
@@ -311,7 +335,7 @@ def get_list_meter_hour(token_id,meter_name, resource_id):
 
 def get_list_meter_day(token_id,meter_name, resource_id):
     """以天得到某一组数据"""
-    localtime = localtime2UTC(get_localtime())
+    localtime = localtime_to_utc(get_localtime())
     meter_info_list = []
     for i in range(0, 7):
         r = get_one_meter(token_id, localtime, meter_name, resource_id)
@@ -336,7 +360,7 @@ def get_all_port_info(token_id):
     return r.json()
 
 
-def get_one_port_info(token_id,port_id):
+def get_one_port_info(token_id, port_id):
     """获取某一端口的信息"""
     headers = {"X-Auth-Token": token_id, "Accept": "application/json"}
     url = NEUTRON_ENDPOINT + "/ports/"+port_id
@@ -354,7 +378,7 @@ def reduce_one_port_info(one_port_info):
     port_info["url"]=url
     port_info["device_owner"]=one_port_info["device_owner"]
     port_info["fixed_ips"]=one_port_info["fixed_ips"]
-    port_info["id"]=one_port_info["id"]
+    port_info["id"] = one_port_info["id"]
     port_info["device_id"]=one_port_info["device_id"]
     return port_info
 
@@ -453,7 +477,7 @@ def _get_tuopu_network_info(network_info, subnet_info):
     return reduce_net_info
 
 
-def _get_servers_detail(token_id,tenant_id):
+def _get_servers_detail(token_id, tenant_id):
     """获取某一租户的servers的详细情况"""
     headers = {"X-Auth-Token": token_id, "Accept": "application/json"}
     url = "http://controller:8774/v2/" +tenant_id+"/servers/detail"
@@ -481,11 +505,11 @@ def get_network_all_info(token_id):
     """获取所有网络信息"""
     headers = {"X-Auth-Token":token_id, "Accept": "application/json"}
     url = NEUTRON_ENDPOINT+"/networks"
-    r = requests.get(url,headers = headers)
+    r = requests.get(url, headers=headers)
     return r.json()
 
 
-def get_network_one_info(token_id,network_id):
+def get_network_one_info(token_id, network_id):
     """根据network_id获取某一特定的网络信息"""
     headers = {"X-Auth-Token":token_id, "Accept": "application/json"}
     url = NEUTRON_ENDPOINT + '/networks/'+network_id
@@ -501,7 +525,7 @@ def get_subnet_all_info(token_id):
     return r.json()
 
 
-def get_subnet_one_info(token_id,subnet_id):
+def get_subnet_one_info(token_id, subnet_id):
     """获取具体某一子网的信息"""
     headers = {"X-Auth-Token": token_id, "Accept": "application/json"}
     url = NEUTRON_ENDPOINT+"/subnets/"+subnet_id
@@ -509,7 +533,7 @@ def get_subnet_one_info(token_id,subnet_id):
     return r.json()
 
 
-def get_tuopu_info(token_id,tenant_id):
+def get_tuopu_info(token_id, tenant_id):
     tuopu_port = _get_tuopu_port_info(token_id)
     tuopu_router = _get_tuopu_router_info(token_id)
     network_info = get_network_all_info(token_id)
@@ -543,6 +567,10 @@ if __name__ == "__main__":
     token_json = get_tenant_token("project01", token_id)
     token_id = token_json['access']['token']['id']
 
+    # print delete_fw_rule(token_id, "7372a0fb-1ad4-4581-ad6e-3af645383b5d")
+
+
+
     # print get_tenant_vms(token, tenant_id)
 
     # 获取某一租户下面的资源
@@ -567,5 +595,5 @@ if __name__ == "__main__":
     #print get_list_meter_minute(token_id,'disk.read.bytes.rate','5cb4c811-36de-4dd1-bf0e-e364db4ebc6e')
     # def get_meter_func_data(token_id, instance_id, meter_name, type):
     #print json.dumps(get_meter_func_data(token_id, '5cb4c811-36de-4dd1-bf0e-e364db4ebc6e', "network.incoming.bytes.rate", "minute"))
-    get_tuopu_info(token_id, "d0b8bf58c42a4f8b92bb67073a1af2b1")
+    # get_tuopu_info(token_id, "d0b8bf58c42a4f8b92bb67073a1af2b1")
 
