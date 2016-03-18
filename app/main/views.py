@@ -120,10 +120,11 @@ def create_firewall_rule():
     return json.dumps(rule_json)
 
 
-@main.route('/firewall_rules/delete')
+@main.route('/firewall_rules/delete', methods=["POST"])
 def delete_firewall_rule():
     token = json.loads(request.args.get('token'))
-    rule_id_list = json.loads(request.args.get('fw_rule_id_list'))
+    rule_id_list = request.json
+    print rule_id_list
     rule_delete_json = delete_fw_rule(token['id'], rule_id_list)
     return json.dumps(rule_delete_json)
 
