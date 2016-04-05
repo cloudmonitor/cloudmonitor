@@ -8,6 +8,9 @@ from ceilometer import *
 from firewall import *
 from settings import *
 from securitygroup import *
+from floatingip import *
+from quota import *
+
 
 
 if __name__ == "__main__":
@@ -27,5 +30,4 @@ if __name__ == "__main__":
     token_json = get_tenant_token("project01", token_id)
     token_id = token_json['access']['token']['id']
 
-    print json.dumps(get_last_network_topology(token_id, 'd0b8bf58c42a4f8b92bb67073a1af2b1'))
-
+    # print json.dumps(get_last_network_topology(token_id, 'd0b8bf58c42a4f8b92bb67073a1af2b1'))

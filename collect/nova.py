@@ -19,12 +19,12 @@ def get_tenant_instance(token_id, tenant_id, instance_id):
     return r.json()
 
 
-def get_tenant_limits(token_id, tenant_id):
-    """获取租户的资源配额限制"""
-    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
-    url = NOVA_ENDPOINT.format(tenant_id=tenant_id)
-    r = requests.get(url+'/limits', headers=headers)
-    return r.json()
+# def get_tenant_limits(token_id, tenant_id):
+#     """获取租户的资源配额限制"""
+#     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+#     url = NOVA_ENDPOINT.format(tenant_id=tenant_id)
+#     r = requests.get(url+'/limits', headers=headers)
+#     return r.json()
 
 
 def get_tenant_flavors(token_id, tenant_id):
