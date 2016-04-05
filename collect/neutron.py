@@ -35,5 +35,160 @@ def get_tenant_ports(token_id):
     return r.json()
 
 
+def get_router_ports(token_id, router_id):
+    """获取路由器相关的port"""
+    router_port={}
+    router_port_info = []
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = NEUTRON_ENDPOINT + "/ports"
+    port_data = requests.get(url=url, headers=headers).json()
+    for i in range(len(port_data['ports'])):
+        if port_data['ports'][i]['device_id'] == router_id:
+            router_port_info.append(port_data['ports'][i])
+    router_port['ports'] = router_port_info
+    return router_port
 
+
+def create_network(token_id, data):
+    """创建网络"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = NEUTRON_ENDPOINT + "/networks"
+    r = requests.post(url=url, data=data, headers=headers)
+    return r.json()
+
+
+def update_network(token_id,data,network_id):
+    """更新网络"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = NEUTRON_ENDPOINT + "/networks/" + network_id
+    print url
+    r = requests.put(url=url, data=data, headers=headers)
+    return r.json()
+
+
+def delete_network(token_id, network_id_list):
+    """删除网络"""
+    delete_status = {}
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    for i in range(len(network_id_list["network_ids"])):
+        url = NEUTRON_ENDPOINT + '/networks/' + network_id_list["network_ids"][i]
+        r = requests.delete(url=url, headers=headers)
+        delete_status[network_id_list["network_ids"][i]] = r.status_code
+    return delete_status
+
+
+def create_subnet(token_id,data):
+    """创建一个子网"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = NEUTRON_ENDPOINT + "/subnets"
+    r = requests.post(url=url, data=data, headers=headers)
+    return r.json()
+
+
+def update_subnet(token_id,data,subnet_id):
+    """更新子网"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = NEUTRON_ENDPOINT + "/subnets/" + subnet_id
+    print url
+    r = requests.put(url=url, data=data, headers=headers)
+    return r.json()
+
+
+def delete_subnet(token_id,subnet_id_list):
+    """删除子网"""
+    delete_status = {}
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    for i in range(len(subnet_id_list["subnet_ids"])):
+        url = NEUTRON_ENDPOINT + '/subnets/' + subnet_id_list["subnet_ids"][i]
+        r = requests.delete(url=url, headers=headers)
+        delete_status[subnet_id_list["subnet_ids"][i]] = r.status_code
+    return delete_status
+
+
+def create_port(token_id,data):
+    """创建一个端口"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = NEUTRON_ENDPOINT + "/ports"
+    r = requests.post(url=url, data=data, headers=headers)
+    return r.json()
+
+
+def update_port(token_id,data,port_id):
+    """更新端口"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = NEUTRON_ENDPOINT + "/ports/" + port_id
+    print url
+    r = requests.put(url=url, data=data, headers=headers)
+    return r.json()
+
+
+def delete_port(token_id,port_id_list):
+    """删除端口"""
+    delete_status = {}
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    for i in range(len(port_id_list["port_ids"])):
+        url = NEUTRON_ENDPOINT + '/ports/' + port_id_list["port_ids"][i]
+        r = requests.delete(url=url, headers=headers)
+        delete_status[port_id_list["port_ids"][i]] = r.status_code
+    return delete_status
+
+
+def create_router(token_id,data):
+    """创建一个路由"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = NEUTRON_ENDPOINT + "/routers"
+    r = requests.post(url=url, data=data, headers=headers)
+    return r.json()
+
+
+def update_router(token_id,data,router_id):
+    """更新路由"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = NEUTRON_ENDPOINT + "/routers/" + router_id
+    print url
+    r = requests.put(url=url, data=data, headers=headers)
+    return r.json()
+
+
+def delete_router(token_id, router_id_list):
+    """删除路由"""
+    delete_status = {}
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    for i in range(len(router_id_list["router_ids"])):
+        url = NEUTRON_ENDPOINT + '/routers/' + router_id_list["router_ids"][i]
+        r = requests.delete(url=url, headers=headers)
+        delete_status[router_id_list["router_ids"][i]] = r.status_code
+    return delete_status
+
+
+def add_router_interface(token_id, router_id, data):
+    """给路由器增加端口"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = NEUTRON_ENDPOINT + "/routers/" + router_id + "/add_router_interface"
+    r = requests.put(url=url, data=data, headers=headers)
+    return r.json()
+
+
+def remove_router_interface(token_id, router_id, data):
+    """路由器删除端口"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = NEUTRON_ENDPOINT + "/routers/" + router_id + "/remove_router_interface"
+    print url
+    r = requests.put(url=url, data=data, headers=headers)
+    return r.json()
+
+
+def get_tenant_ext_net(token_id):
+    """获取租户的外网数据"""
+    extnet_info = {}
+    extnet =[]
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = NEUTRON_ENDPOINT+'/networks'
+    network_info = requests.get(url, headers=headers).json()
+    network_info = network_info['networks']
+    for i in range(len(network_info)):
+        if network_info[i]['router:external']:
+            extnet.append(network_info[i])
+    extnet_info["ext_net"] = extnet
+    return extnet_info
 
