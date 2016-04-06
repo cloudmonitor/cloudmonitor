@@ -1,6 +1,6 @@
 # _*_ coding:utf-8 _*_
 
-from neutron import get_tenant_networks, get_tenant_subnets, get_tenant_routers, get_tenant_ports
+from neutron import get_all_networks, get_tenant_subnets, get_tenant_routers, get_tenant_ports
 from nova import get_tenant_instances
 
 
@@ -147,7 +147,7 @@ def get_network_topology(token_id, tenant_id):
     tuopu_info = {}
     tuopu_port = _get_tuopu_port_info(token_id)
     tuopu_router = _get_tuopu_router_info(token_id)
-    network_info = get_tenant_networks(token_id)
+    network_info = get_all_networks(token_id)
     subnet_info = get_tenant_subnets(token_id)
     tuopu_network = _get_tuopu_network_info(network_info, subnet_info)
     _servers_detail = get_tenant_instances(token_id, tenant_id)

@@ -296,22 +296,16 @@ def front_get_tenant_routers():
 @main.route('/floatingips')
 def get_floatingips_info():
     token = json.loads(request.args.get('token'))
-    floatingip_json = get_floating_ips(token["id"], token['tenant']['id'])
+    floatingip_json = get_floating_ips(token["id"])
     return json.dumps(floatingip_json)
-
-
-@main.route('/floatingips/extnet')
-def get_floatingips_extnet():
-    token = json.loads(request.args.get('token'))
-    ext_json = get_floating_ips_pool(token["id"], token['tenant']['id'])
-    return json.dumps(ext_json)
 
 
 @main.route('/floatingips/allocate', methods=["POST"])
 def allocate_floatingips():
     token = json.loads(request.args.get('token'))
     data = json.dumps(request.json)
-    floatingip_json = allocate_floating_ips(token["id"], token['tenant']['id'], data)
+    print data
+    floatingip_json = allocate_floating_ips(token["id"], data)
     return json.dumps(floatingip_json)
 
 
@@ -319,8 +313,23 @@ def allocate_floatingips():
 def release_floatingips():
     token = json.loads(request.args.get('token'))
     data = request.json
-    release_json = release_floating_ips(token["id"], token['tenant']['id'], data)
+    release_json = release_floating_ips(token["id"], data)
     return json.dumps(release_json)
+
+
+@main.route('/floatingips/associate/<floatingip_id>', methods=["POST"])
+def associate_floatingips(floatingip_id):
+    token = json.loads(request.args.get('token'))
+    data = json.dumps(request.json)
+    associate_json = associate_floatingip_prot(token["id"], floatingip_id, data)
+    return json.dumps(associate_json)
+
+
+@main.route('/floatingips/disassociateport')
+def disassociate_floatingips_port():
+    token = json.loads(request.args.get('token'))
+    disassociateport_json = get_disassociate_floatingip_port(token["id"])
+    return json.dumps(disassociateport_json)
 
 
 @main.route('/security_groups')

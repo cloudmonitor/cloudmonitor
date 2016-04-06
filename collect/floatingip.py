@@ -1,12 +1,13 @@
 # _*_ coding:utf-8 _*_
 
 from settings import *
+from neutron import get_tenant_ports
 
 
-def get_floating_ips(token_id, tenant_id):
+def get_floating_ips(token_id):
     """ 列出floating ip"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
-    url = NOVA_ENDPOINT.format(tenant_id=tenant_id) + '/os-floating-ips'
+    url = NEUTRON_ENDPOINT + '/floatingips'
     r = requests.get(url, headers=headers)
     return r.json()
 
@@ -19,20 +20,45 @@ def get_floating_ips_pool(token_id, tenant_id):
     return r.json()
 
 
-def allocate_floating_ips(token_id, tenant_id, data):
+def allocate_floating_ips(token_id, data):
     """分配一个floating ip"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
-    url = NOVA_ENDPOINT.format(tenant_id=tenant_id) + '/os-floating-ips'
+    url = NEUTRON_ENDPOINT + '/floatingips'
     r = requests.post(url, data=data, headers=headers)
     return r.json()
 
 
-def release_floating_ips(token_id, tenant_id, floating_ip_ids):
+def release_floating_ips(token_id, floating_ip_ids):
     """分配一个floating ip"""
     release_status = {}
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     for i in range(len(floating_ip_ids["floating_ip_ids"])):
-        url = NOVA_ENDPOINT.format(tenant_id=tenant_id) + '/os-floating-ips/' + floating_ip_ids["floating_ip_ids"][i]
+        url = NEUTRON_ENDPOINT + '/floatingips/' + floating_ip_ids["floating_ip_ids"][i]
         r = requests.delete(url, headers=headers)
         release_status[floating_ip_ids["floating_ip_ids"][i]] = r.status_code
     return release_status
+
+
+def associate_floatingip_prot(token_id, floatingip_id, data):
+    """关联浮动IP到指定端口"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = NEUTRON_ENDPOINT + "/floatingips/" + floatingip_id
+    r = requests.put(url, data=data, headers=headers)
+    return r.json()
+
+
+def get_disassociate_floatingip_port(token_id):
+    """获得未被关联的虚拟机端口"""
+    ports = get_tenant_ports(token_id)
+    floatingips = get_floating_ips(token_id)
+    disassociate_port = {"disassociate_port": []}
+    for i in range(len(ports["ports"])):
+        if ports["ports"][i]["device_owner"].startswith("compute:"):
+            disassociate_port["disassociate_port"].append(ports["ports"][i])
+            for j in range(len(floatingips["floatingips"])):
+                if ports["ports"][i]["id"] == floatingips["floatingips"][j]["port_id"]:
+                    disassociate_port["disassociate_port"].remove(ports["ports"][i])
+    return disassociate_port
+
+
+

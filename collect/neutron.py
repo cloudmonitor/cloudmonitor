@@ -5,15 +5,20 @@ from settings import *
 
 def get_tenant_networks(token_id):
     """获取租户的network"""
+    network_info = get_all_networks(token_id)
+    tenant_networks = {"networks": []}
+    for i in range(len(network_info['networks'])):
+        if not network_info['networks'][i]["router:external"]:
+            tenant_networks["networks"].append(network_info['networks'][i])
+    return tenant_networks
+
+
+def get_all_networks(token_id):
+    """获得所有的网络"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     url = NEUTRON_ENDPOINT
     r = requests.get(url+'/networks', headers=headers)
-    network_info = r.json()
-    for i in range(len(network_info['networks'])):
-        if network_info['networks'][i]['name'] == "ext-net":
-            network_info['networks'].remove(network_info['networks'][i])
-            break
-    return network_info
+    return r.json()
 
 
 def get_tenant_subnets(token_id):
@@ -71,7 +76,7 @@ def create_network(token_id, data):
     return network_info
 
 
-def update_network(token_id,data,network_id):
+def update_network(token_id, data, network_id):
     """更新网络"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     url = NEUTRON_ENDPOINT + "/networks/" + network_id
@@ -91,7 +96,7 @@ def delete_network(token_id, network_id_list):
     return delete_status
 
 
-def create_subnet(token_id,data):
+def create_subnet(token_id, data):
     """创建一个子网"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     url = NEUTRON_ENDPOINT + "/subnets"
@@ -99,7 +104,7 @@ def create_subnet(token_id,data):
     return r.json()
 
 
-def update_subnet(token_id,data,subnet_id):
+def update_subnet(token_id, data, subnet_id):
     """更新子网"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     url = NEUTRON_ENDPOINT + "/subnets/" + subnet_id
@@ -108,7 +113,7 @@ def update_subnet(token_id,data,subnet_id):
     return r.json()
 
 
-def delete_subnet(token_id,subnet_id_list):
+def delete_subnet(token_id, subnet_id_list):
     """删除子网"""
     delete_status = {}
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
@@ -119,7 +124,7 @@ def delete_subnet(token_id,subnet_id_list):
     return delete_status
 
 
-def create_port(token_id,data):
+def create_port(token_id, data):
     """创建一个端口"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     url = NEUTRON_ENDPOINT + "/ports"
@@ -136,7 +141,7 @@ def update_port(token_id,data,port_id):
     return r.json()
 
 
-def delete_port(token_id,port_id_list):
+def delete_port(token_id, port_id_list):
     """删除端口"""
     delete_status = {}
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
@@ -147,7 +152,7 @@ def delete_port(token_id,port_id_list):
     return delete_status
 
 
-def create_router(token_id,data):
+def create_router(token_id, data):
     """创建一个路由"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     url = NEUTRON_ENDPOINT + "/routers"
@@ -155,7 +160,7 @@ def create_router(token_id,data):
     return r.json()
 
 
-def update_router(token_id,data,router_id):
+def update_router(token_id, data, router_id):
     """更新路由"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     url = NEUTRON_ENDPOINT + "/routers/" + router_id
@@ -213,17 +218,9 @@ def remove_router_interface(token_id, router_id, data):
 
 def get_tenant_ext_net(token_id):
     """获取租户的外网数据"""
-    extnet_info = {}
-    extnet =[]
-    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
-    url = NEUTRON_ENDPOINT+'/networks'
-    network_info = requests.get(url, headers=headers).json()
-    network_info = network_info['networks']
-    for i in range(len(network_info)):
-        if network_info[i]['router:external']:
-            extnet.append(network_info[i])
-    extnet_info["ext_net"] = extnet
+    extnet_info = {"ext_net": []}
+    network_info = get_all_networks(token_id)
+    for i in range(len(network_info['networks'])):
+        if network_info['networks'][i]['router:external']:
+            extnet_info["ext_net"].append(network_info['networks'][i])
     return extnet_info
-
-
-

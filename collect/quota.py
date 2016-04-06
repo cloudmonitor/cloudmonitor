@@ -19,8 +19,8 @@ def get_tenant_limits(token_id, tenant_id):
 
 def _get_tenant_floatingips_used(token_id, tenant_id):
     """获取当前租户创建了多少floatingip"""
-    floatingips = get_floating_ips(token_id, tenant_id)
-    return len(floatingips["floating_ips"])
+    floatingips = get_floating_ips(token_id)
+    return len(floatingips["floatingips"])
 
 
 def _get_tenant_securitygroups_used(token_id):
