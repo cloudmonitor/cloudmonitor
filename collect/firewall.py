@@ -89,3 +89,72 @@ def update_firewall_rule(token_id, rule, fw_rule_id):
     print r.json()
     return r.json()
 
+
+def delete_fw_policy(token_id,policy_id_list):
+    """删除防火墙策略"""
+    delete_status = {}
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    for i in range(len(policy_id_list["firewall_policies_ids"])):
+        url = NEUTRON_ENDPOINT + '/fw/firewall_policies/' + policy_id_list["firewall_policies_ids"][i]
+        r = requests.delete(url=url, headers=headers)
+        delete_status[policy_id_list["firewall_policies_ids"][i]] = r.status_code
+    return delete_status
+
+
+def create_policy(token_id, data):
+    """创建防火墙策略"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = NEUTRON_ENDPOINT + '/fw/firewall_policies'
+    r = requests.post(url=url, data=data, headers=headers)
+    return r.json()
+
+
+def update_policy(token_id, data, firewall_policies_id):
+    """更新防火墙策略"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = NEUTRON_ENDPOINT + '/fw/firewall_policies/' + firewall_policies_id
+    r = requests.put(url=url, data=data, headers=headers)
+    return r.json()
+
+
+def insert_rule_policy(token_id, policy_id, data):
+    """插入一条规则到策略中"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = NEUTRON_ENDPOINT + '/fw/firewall_policies/' + policy_id + '/insert_rule'
+    r = requests.put(url=url, data=data, headers=headers)
+    return r.json()
+
+
+def remove_rule_policy(token_id,policy_id,data):
+    """从某一策略中删除某一规则"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = NEUTRON_ENDPOINT + '/fw/firewall_policies/' + policy_id + '/remove_rule'
+    r = requests.put(url=url, data=data,headers=headers)
+    return r.json()
+
+
+def create_firewall(token_id,data):
+    """创建防火墙"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = NEUTRON_ENDPOINT + '/fw/firewalls'
+    r = requests.post(url=url, data=data, headers=headers)
+    return r.json()
+
+
+def update_firewall(token_id, firewall_data, firewall_id):
+    """更新防火墙"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = NEUTRON_ENDPOINT + '/fw/firewalls/' + firewall_id
+    r = requests.put(url=url, data=firewall_data, headers=headers)
+    return r.json()
+
+
+def delete_firewll(token_id, firewalls_id_list):
+    """删除防火墙"""
+    delete_status = {}
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    for i in range(len(firewalls_id_list["firewall_ids"])):
+        url = NEUTRON_ENDPOINT + '/fw/firewalls/' + firewalls_id_list["firewall_ids"][i]
+        r = requests.delete(url=url, headers=headers)
+        delete_status[firewalls_id_list["firewall_ids"][i]] = r.status_code
+    return delete_status
