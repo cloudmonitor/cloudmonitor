@@ -7,6 +7,7 @@ from . import main
 from collect.monitor import *
 from collect.firewall import *
 from collect.floatingip import *
+from collect.images import *
 # from collect.monitor import get_tenant_token, get_tenants, get_tenant_instances, get_tenant_instance,\
 #                             get_tenant_limits, get_user_token, get_tenant_flavors, get_tenant_ports, \
 #                             get_tenant_networks, get_tenant_subnets, get_tenant_routers, get_one_firewalls_info,\
@@ -244,6 +245,34 @@ def front_get_tenant_flavors():
     return json.dumps(flavors_json)
 
 
+@main.route('/flavors_detail/<flavor_id>')
+def front_get_flavor_detail(flavor_id):
+    token = json.loads(request.args.get('token'))
+    flavor_json = get_flavor_detail(token['id'], token['tenant']['id'], flavor_id)
+    return json.dumps(flavor_json)
+
+
+@main.route('/tenant_limits')
+def front_get_limits():
+    token = json.loads(request.args.get('token'))
+    limits_json = get_tenant_limits(token['id'], token['tenant']['id'])
+    return json.dumps(limits_json)
+
+
+@main.route('/os_availability_zone')
+def front_get_os_availability_zone():
+    token = json.loads(request.args.get('token'))
+    zone_json = get_tenant_os_availability_zone(token['id'], token['tenant']['id'])
+    return json.dumps(zone_json)
+
+
+@main.route('/images')
+def front_get_images():
+    token = json.loads(request.args.get('token'))
+    images_json = get_tenant_images(token['id'])
+    return json.dumps(images_json)
+
+
 @main.route('/instances/<instance_id>')
 def front_get_tenant_instance(instance_id):
     token = json.loads(request.args.get('token'))
@@ -255,6 +284,13 @@ def front_get_tenant_instance(instance_id):
 def front_get_tenant_networks():
     token = json.loads(request.args.get('token'))
     networks_json = get_tenant_networks(token['id'])
+    return json.dumps(networks_json)
+
+
+@main.route('/all_networks')
+def front_get_all_networks():
+    token = json.loads(request.args.get('token'))
+    networks_json = get_all_networks(token['id'])
     return json.dumps(networks_json)
 
 
@@ -549,7 +585,7 @@ def create_subnet_info():
 def update_subnet_info(subnet_id):
     token = json.loads(request.args.get('token'))
     subnet = request.json
-    subnet_json = update_network(token['id'], json.dumps(subnet), subnet_id)
+    subnet_json = update_subnet(token['id'], json.dumps(subnet), subnet_id)
     return json.dumps(subnet_json)
 
 

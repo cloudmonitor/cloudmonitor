@@ -32,7 +32,23 @@ def get_tenant_flavors(token_id, tenant_id):
     """获取租户的flavor"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     url = NOVA_ENDPOINT.format(tenant_id=tenant_id)
-    r = requests.get(url+'/flavors/detail', headers=headers)
+    r = requests.get(url+'/flavors', headers=headers)
+    return r.json()
+
+
+def get_flavor_detail(token_id, tenant_id, flavor_id):
+    """获取某一具体的flavor"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = NOVA_ENDPOINT.format(tenant_id=tenant_id) + "/flavors/" + flavor_id
+    r = requests.get(url=url, headers=headers)
+    return r.json()
+
+
+def get_tenant_os_availability_zone(token_id,tenant_id):
+    """获取可分配的域"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = NOVA_ENDPOINT.format(tenant_id=tenant_id) + "/os-availability-zone"
+    r = requests.get(url=url, headers=headers)
     return r.json()
 
 
@@ -40,7 +56,6 @@ def create_servers(token_id, tenant_id, data):
     """创建一个虚拟机"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     url = NOVA_ENDPOINT.format(tenant_id=tenant_id) + "/servers"
-    print url
     r = requests.post(url=url, data=data, headers=headers)
     return r.json()
 
@@ -49,7 +64,6 @@ def update_servers(token_id, tenant_id, data, servers_id):
     """更新虚拟机"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     url = NOVA_ENDPOINT.format(tenant_id=tenant_id) + "/servers/" + servers_id
-    print url
     r = requests.put(url=url, data=data, headers=headers)
     return r.json()
 
@@ -69,7 +83,6 @@ def bind_interface(token_id, tenant_id, data, servers_id):
     """绑定虚拟网卡"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     url = NOVA_ENDPOINT.format(tenant_id=tenant_id) + "/servers/" + servers_id + "/os-interface"
-    print url
     r = requests.post(url=url, data=data, headers=headers)
     return r.json()
 
@@ -78,7 +91,6 @@ def delete_interface(token_id, tenant_id, servers_id, port_id):
     """解绑虚拟网卡"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     url = NOVA_ENDPOINT.format(tenant_id=tenant_id) + "/servers/" + servers_id + "/os-interface/" + port_id
-    print url
     r = requests.post(url=url, headers=headers)
     print r.json()
 
