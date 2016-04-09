@@ -245,11 +245,11 @@ def front_get_tenant_flavors():
     return json.dumps(flavors_json)
 
 
-@main.route('/flavors_detail/<flavor_id>')
-def front_get_flavor_detail(flavor_id):
-    token = json.loads(request.args.get('token'))
-    flavor_json = get_flavor_detail(token['id'], token['tenant']['id'], flavor_id)
-    return json.dumps(flavor_json)
+# @main.route('/flavors_detail/<flavor_id>')
+# def front_get_flavor_detail(flavor_id):
+#     token = json.loads(request.args.get('token'))
+#     flavor_json = get_flavor_detail(token['id'], token['tenant']['id'], flavor_id)
+#     return json.dumps(flavor_json)
 
 
 @main.route('/tenant_limits')

@@ -32,16 +32,16 @@ def get_tenant_flavors(token_id, tenant_id):
     """获取租户的flavor"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     url = NOVA_ENDPOINT.format(tenant_id=tenant_id)
-    r = requests.get(url+'/flavors', headers=headers)
+    r = requests.get(url+'/flavors/detail', headers=headers)
     return r.json()
 
 
-def get_flavor_detail(token_id, tenant_id, flavor_id):
-    """获取某一具体的flavor"""
-    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
-    url = NOVA_ENDPOINT.format(tenant_id=tenant_id) + "/flavors/" + flavor_id
-    r = requests.get(url=url, headers=headers)
-    return r.json()
+# def get_flavor_detail(token_id, tenant_id, flavor_id):
+#     """获取某一具体的flavor"""
+#     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+#     url = NOVA_ENDPOINT.format(tenant_id=tenant_id) + "/flavors/" + flavor_id
+#     r = requests.get(url=url, headers=headers)
+#     return r.json()
 
 
 def get_tenant_os_availability_zone(token_id,tenant_id):
