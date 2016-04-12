@@ -9,6 +9,7 @@ from firewall import *
 from settings import *
 from securitygroup import *
 from quota import *
+from keypair import *
 
 
 if __name__ == "__main__":
