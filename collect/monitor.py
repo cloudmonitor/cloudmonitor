@@ -9,7 +9,7 @@ from firewall import *
 from settings import *
 from securitygroup import *
 from quota import *
-
+from floatingip import *
 
 if __name__ == "__main__":
 
@@ -38,4 +38,12 @@ if __name__ == "__main__":
     #print json.dumps(get_tenant_networks(token_id))\
     #print json.dumps(create_network(token_id,'[{"network": {"name": "222", "admin_state_up": true}}, {"subnet": {"ip_version": 4, "cidr": "192.168.0.0/24", "name": "111"}}]'))
     #print json.dumps(create_network(token_id,'[{"network": {"name": "111", "admin_state_up": true}}, {"subnet": {"ip_version": 4, "cidr": "10.1.2.3/24", "name": "222"}}]'))
-    print json.dumps(get_tenant_limits(token_id,tenant_id))
+    #print json.dumps(get_tenant_limits(token_id,tenant_id))
+    #print create3_servers(token_id, tenant_id, '{"server": {"security_groups": [],"availability-zone": "compute01","name": "123","imageRef": "d52fa4c8-dcbe-433c-8ee6-99b9f669e1ce","flavorRef": "1","max_count": "3","network_info": [{"network_id": "20f23a71-badc-43be-8f96-5422f2c9dc2c","subnet_id": "73ab5a15-9741-4772-8543-9c915dd08895"},{"network_id": "a62ccae1-4e60-4de3-8233-4f35420197b5","subnet_id": "98f80625-6d12-474a-9420-88c74269ee4c"}],"networks": [{"uuid": "20f23a71-badc-43be-8f96-5422f2c9dc2c"},{"uuid": "a62ccae1-4e60-4de3-8233-4f35420197b5"}]}}')
+    #print json.dumps(get_new_subnets(token_id))
+    #print json.dumps(disserver_security_group(token_id, tenant_id, "5cb4c811-36de-4dd1-bf0e-e364db4ebc6e"))
+    #print server_update_sg(token_id, tenant_id, "5cb4c811-36de-4dd1-bf0e-e364db4ebc6e", '{"security_groups": ["test","asda"]}')
+    #print json.dumps(server_security_group(token_id, tenant_id, "5cb4c811-36de-4dd1-bf0e-e364db4ebc6e"))
+    #print json.dumps(disserver_security_group(token_id, tenant_id, "5cb4c811-36de-4dd1-bf0e-e364db4ebc6e"))
+    #print action_server(token_id, tenant_id, '8a397967-a203-41e6-9755-1cbf58268845', '{"pause": null}')
+    print action_server(token_id, tenant_id, '8a397967-a203-41e6-9755-1cbf58268845', '{"reboot": {"type": "HARD"}}')

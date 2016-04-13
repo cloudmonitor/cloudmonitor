@@ -164,9 +164,46 @@ def get_last_network_topology(token_id, tenant_id):
     global NET_NUM
     global EXNET_NUM
     global SERVER_NUM
-    tuopu_info = get_network_topology(token_id,tenant_id)
-    max_num = max(ROUTER_NUM,NET_NUM,EXNET_NUM,SERVER_NUM)
-    # print max_num
+    tuopu_info = get_network_topology(token_id, tenant_id)
+    max_num = max(ROUTER_NUM,NET_NUM,EXNET_NUM, SERVER_NUM)
+    x = 100
+    y = 60
+    width = (max_num+1)*20
+    height = 150
+    router_num = 0
+    server_nmu = 0
+    net_exnet_num = 0
+    for i in range(len(tuopu_info['devices'])):
+        if tuopu_info['devices'][i]['src'].endswith("server.png"):
+            tuopu_info['devices'][i]['x'] = x + 8*width
+            tuopu_info['devices'][i]['y'] = y + server_nmu*height
+            server_nmu += 1
+        if tuopu_info['devices'][i]['src'].endswith("router.png"):
+            tuopu_info['devices'][i]['x'] = x + 3*width
+            tuopu_info['devices'][i]['y'] = y + router_num*height
+            router_num += 1
+        if tuopu_info['devices'][i]['src'].endswith("network.png"):
+            tuopu_info['devices'][i]['x'] = x + 6*width
+            tuopu_info['devices'][i]['y'] = y + height*net_exnet_num
+            net_exnet_num += 1
+        if tuopu_info['devices'][i]['src'].endswith("extnet.png"):
+            tuopu_info['devices'][i]['x'] = x + width
+            tuopu_info['devices'][i]['y'] = y + height
+            net_exnet_num += 1
+    ROUTER_NUM = 0
+    NET_NUM = 0
+    EXNET_NUM = 0
+    SERVER_NUM = 0
+    return tuopu_info
+
+
+def get_last_network_topology_bak(token_id, tenant_id):
+    global ROUTER_NUM
+    global NET_NUM
+    global EXNET_NUM
+    global SERVER_NUM
+    tuopu_info = get_network_topology(token_id, tenant_id)
+    max_num = max(ROUTER_NUM,NET_NUM,EXNET_NUM, SERVER_NUM)
     x = 100
     y = 60
     width = (max_num+1)*20
@@ -192,4 +229,3 @@ def get_last_network_topology(token_id, tenant_id):
     EXNET_NUM = 0
     SERVER_NUM = 0
     return tuopu_info
-

@@ -22,7 +22,7 @@ def get_all_networks(token_id):
 
 
 def get_tenant_subnets(token_id):
-    """获取租户的flavor"""
+    """获取租户的子网"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     url = NEUTRON_ENDPOINT
     r = requests.get(url+'/subnets', headers=headers)
@@ -30,7 +30,7 @@ def get_tenant_subnets(token_id):
 
 
 def get_tenant_routers(token_id):
-    """获取租户的flavor"""
+    """获取租户的路由"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     url = NEUTRON_ENDPOINT
     r = requests.get(url+'/routers', headers=headers)
@@ -43,6 +43,21 @@ def get_tenant_ports(token_id):
     url = NEUTRON_ENDPOINT + "/ports"
     r = requests.get(url=url, headers=headers)
     return r.json()
+
+
+def get_new_subnets(token_id):
+    """获取有ip地址池的子网"""
+    subnet_info = []
+    subnet = {}
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = NEUTRON_ENDPOINT
+    r = requests.get(url+'/subnets', headers=headers)
+    subnet_test = r.json()
+    for i in range(len(subnet_test['subnets'])):
+        if subnet_test['subnets'][i]['allocation_pools']:
+            subnet_info.append(subnet_test['subnets'][i])
+    subnet['subnets'] = subnet_info
+    return subnet
 
 
 def get_router_ports(token_id, router_id):

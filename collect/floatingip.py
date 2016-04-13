@@ -12,6 +12,19 @@ def get_floating_ips(token_id):
     return r.json()
 
 
+def get_disallocate_floating_ips(token_id):
+    """ 列出未分配的floating ip"""
+    floating_ips_info = get_floating_ips(token_id)
+    floating_ips = []
+    float_ips = {}
+    for i in range(len(floating_ips_info['floatingips'])):
+        print len(floating_ips_info['floatingips'])
+        if floating_ips_info['floatingips'][i]['status'] == 'DOWN':
+            floating_ips.append(floating_ips_info['floatingips'][i])
+    float_ips['floatingips'] = floating_ips
+    return float_ips
+
+
 def get_floating_ips_pool(token_id, tenant_id):
     """获取分配外网IP的网络"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
