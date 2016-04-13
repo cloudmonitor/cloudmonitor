@@ -691,3 +691,29 @@ def remove_router_inter(router_id):
     return json.dumps(dele_status)
 
 
+@main.route('/keypairs')
+def get_keypairs():
+    token = json.loads(request.args.get('token'))
+    keypairs = get_tenant_keypairs(token['id'], token["tenant"]["id"])
+    return json.dumps(keypairs)
+
+
+@main.route('/keypairs/create', methods=["POST"])
+def create_keypairs():
+    token = json.loads(request.args.get('token'))
+    data = json.dumps(request.json)
+    keypairs = create_tenant_keypair(token['id'], token["tenant"]["id"], data)
+    return json.dumps(keypairs)
+
+
+@main.route('/keypairs/delete', methods=["POST"])
+def delete_keypairs():
+    token = json.loads(request.args.get('token'))
+    keypairs_name = request.json
+    del_status = delete_tenant_keypair(token['id'], token["tenant"]["id"], keypairs_name)
+    return json.dumps(del_status)
+
+
+
+
+
