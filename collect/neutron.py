@@ -1,7 +1,7 @@
 # _*_ coding:utf-8 _*_
 
 from settings import *
-
+import copy
 
 def get_tenant_networks(token_id):
     """获取租户的network"""
@@ -205,7 +205,7 @@ def disconnect_subnet(token_id):
     """没有关联到路由器的子网"""
     port_info = get_tenant_ports(token_id)
     subnet_info = get_tenant_subnets(token_id)
-    subnet_info_return = subnet_info
+    subnet_info_return = copy.deepcopy(subnet_info)
     for i in range(len(port_info['ports'])):
         if port_info['ports'][i]['device_owner'] == "network:router_interface":
             for j in range(len(subnet_info['subnets'])):

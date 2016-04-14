@@ -39,4 +39,5 @@ if __name__ == "__main__":
     #print json.dumps(get_tenant_networks(token_id))\
     #print json.dumps(create_network(token_id,'[{"network": {"name": "222", "admin_state_up": true}}, {"subnet": {"ip_version": 4, "cidr": "192.168.0.0/24", "name": "111"}}]'))
     #print json.dumps(create_network(token_id,'[{"network": {"name": "111", "admin_state_up": true}}, {"subnet": {"ip_version": 4, "cidr": "10.1.2.3/24", "name": "222"}}]'))
-    print json.dumps(get_tenant_limits(token_id,tenant_id))
+    #print json.dumps(get_tenant_limits(token_id,tenant_id))
+    print json.dumps(disconnect_subnet(token_id))
