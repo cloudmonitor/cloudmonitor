@@ -1,7 +1,13 @@
 # _*_ coding:utf-8 _*_
 
-from settings import *
+
 import copy
+
+
+from settings import *
+
+
+
 
 def get_tenant_networks(token_id):
     """获取租户的network"""
@@ -222,15 +228,6 @@ def add_router_interface(token_id, router_id, data):
     return r.json()
 
 
-# def remove_router_interface(token_id, router_id, data):
-#     """路由器删除端口"""
-#     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
-#     url = NEUTRON_ENDPOINT + "/routers/" + router_id + "/remove_router_interface"
-#     print url
-#     r = requests.put(url=url, data=data, headers=headers)
-#     return r.json()
-
-
 def remove_router_interface(token_id, router_id, data):
     """路由器删除端口"""
     delete_status = []
@@ -253,4 +250,43 @@ def get_tenant_ext_net(token_id):
         if network_info['networks'][i]['router:external']:
             extnet_info["ext_net"].append(network_info['networks'][i])
     return extnet_info
+
+
+def get_dis_port(token_id):
+    """获取无关的端口"""
+    port_info = get_tenant_ports(token_id)
+    delete_port_list_info = []
+    delete_port_list = {}
+    for i in range(len(port_info["ports"])):
+        if not port_info['ports'][i]['device_owner']:
+            delete_port_list_info.append(port_info['ports'][i]['id'])
+    delete_port_list['port_ids'] = delete_port_list_info
+    return  delete_port_list
+
+
+def get_subnet_servers(token_id, tenant_id, subnet_id):
+    """获取某一子网下包括虚拟机"""
+    from nova import get_tenant_instances
+    subnet_vm_list_info = []
+    subnet_vm_list = {}
+    subnet_port_list_info = []
+    subnet_port_list = {}
+    port_info = get_tenant_ports(token_id)
+    servers_info = get_tenant_instances(token_id, tenant_id)
+    for i in range(len(port_info['ports'])):
+        if port_info['ports'][i]['device_owner'].startswith('compute:compute') and port_info['ports'][i]['fixed_ips'][0]['subnet_id'] == subnet_id:
+            subnet_port_list_info.append(port_info['ports'][i])
+    subnet_port_list['ports'] = subnet_port_list_info
+    for j in range(len(subnet_port_list['ports'])):
+        for k in range(len(servers_info['servers'])):
+            if subnet_port_list['ports'][j]['device_id'] == servers_info['servers'][k]['id']:
+                subnet_vm_list_info.append(servers_info['servers'][k]['id'])
+    subnet_vm_list['servers'] = subnet_vm_list_info
+    return subnet_vm_list
+
+
+
+
+
+
 

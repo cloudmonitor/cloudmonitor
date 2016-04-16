@@ -1,7 +1,7 @@
 # _*_ coding:utf-8 _*_
 
 from settings import *
-from neutron import *
+
 
 
 def get_tenant_instances(token_id, tenant_id):
@@ -82,6 +82,7 @@ def delete_servers(token_id, tenant_id, servers_id_list):
 
 def bind_interface(token_id, tenant_id, data, servers_id):
     """绑定虚拟网卡"""
+    from neutron import create_port
     print data
     network_id = data['interface']["network_id"]
     subnet_id = data['interface']["subnet_id"]
@@ -134,6 +135,7 @@ def create2_servers(token_id, tenant_id, servers_data):
         subnet_id = network_info[i]["subnet_id"]
         port_data = '{"port": {"network_id": "%s","fixed_ips": [{"subnet_id": "%s"}]}}' % (network_id, subnet_id)
         port_r = create_port(token_id, port_data)
+        print port_r
         port_id = port_r['port']['id']
         for j in range(len(servers_data['server']['networks'])):
             if network_id == servers_data['server']['networks'][j]['uuid']:

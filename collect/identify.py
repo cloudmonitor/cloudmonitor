@@ -27,3 +27,5 @@ def get_tenants(token_id):
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     r = requests.get(KEYSTONE_ENDPOINT+'/tenants', headers=headers)
     return r.json()
+
+

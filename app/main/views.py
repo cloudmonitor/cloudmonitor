@@ -598,7 +598,9 @@ def delete_net():
 def create_subnet_info():
     token = json.loads(request.args.get('token'))
     subnet_data = request.json
+    print json.dumps(subnet_data)
     subnet_json = create_subnet(token['id'], json.dumps(subnet_data))
+    print json.dumps(subnet_json)
     return json.dumps(subnet_json)
 
 
