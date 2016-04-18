@@ -16,3 +16,4 @@ GLANCE_ENDPOINT = 'http://controller:9292/v2'
 NOVA_ENDPOINT = 'http://controller:8774/v2/{tenant_id}'
 NEUTRON_ENDPOINT = 'http://controller:9696/v2.0'
 CEILOMETER_ENDPOINT = 'http://controller:8777/v2'
+KEYSTONE_ENDPOINT01 = "http://controller:35357/v2.0/users"

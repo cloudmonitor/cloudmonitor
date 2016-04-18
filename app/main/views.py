@@ -8,6 +8,7 @@ from collect.monitor import *
 from collect.firewall import *
 from collect.floatingip import *
 from collect.images import *
+from collect.user import *
 # from collect.monitor import get_tenant_token, get_tenants, get_tenant_instances, get_tenant_instance,\
 #                             get_tenant_limits, get_user_token, get_tenant_flavors, get_tenant_ports, \
 #                             get_tenant_networks, get_tenant_subnets, get_tenant_routers, get_one_firewalls_info,\
@@ -124,123 +125,6 @@ def bind_security_group_info(server_id):
     print data
     update_sg = server_update_sg(token['id'], token['tenant']['id'], server_id, data)
     return json.dumps(update_sg)
-
-
-# @main.route('/security_group/remove/<servers_id>', methods=["POST"])
-# def remove_security_group_info(servers_id):
-#     token = json.loads(request.args.get('token'))
-#     data = request.json
-#     print data
-#     remove_sg_json = remove_security_group(token['id'], token['tenant']['id'], servers_id, data)
-#     return json.dumps(remove_sg_json)
-#
-#
-# @main.route('/server/pause/<servers_id>', methods=["POST"])
-# def pause_server(servers_id):
-#     token = json.loads(request.args.get('token'))
-#     data = request.json
-#     print data
-#     pause_json = action_server(token['id'], token['tenant']['id'], servers_id, data)
-#     return json.dumps(pause_json)
-#
-#
-# @main.route('/server/unpause/<servers_id>', methods=["POST"])
-# def unpause_server(servers_id):
-#     token = json.loads(request.args.get('token'))
-#     data = request.json
-#     print data
-#     unpause_json = action_server(token['id'], token['tenant']['id'], servers_id, data)
-#     return json.dumps(unpause_json)
-#
-#
-# @main.route('/server/suspend/<servers_id>', methods=["POST"])
-# def suspend_server(servers_id):
-#     token = json.loads(request.args.get('token'))
-#     data = request.json
-#     print data
-#     suspend_json = action_server(token['id'], token['tenant']['id'], servers_id, data)
-#     return json.dumps(suspend_json)
-#
-#
-# @main.route('/server/resume/<servers_id>', methods=["POST"])
-# def resume_server(servers_id):
-#     token = json.loads(request.args.get('token'))
-#     data = request.json
-#     print data
-#     resume_json = action_server(token['id'], token['tenant']['id'], servers_id, data)
-#     return json.dumps(resume_json)
-#
-#
-# @main.route('/server/shelve/<servers_id>', methods=["POST"])
-# def shelve_server(servers_id):
-#     token = json.loads(request.args.get('token'))
-#     data = request.json
-#     print data
-#     shelve_json = action_server(token['id'], token['tenant']['id'], servers_id, data)
-#     return json.dumps(shelve_json)
-#
-#
-# @main.route('/server/unshelve/<servers_id>', methods=["POST"])
-# def unshelve_server(servers_id):
-#     token = json.loads(request.args.get('token'))
-#     data = request.json
-#     print data
-#     unshelve_json = action_server(token['id'], token['tenant']['id'], servers_id, data)
-#     return json.dumps(unshelve_json)
-#
-#
-# @main.route('/server/lock/<servers_id>', methods=["POST"])
-# def lock_server(servers_id):
-#     token = json.loads(request.args.get('token'))
-#     data = request.json
-#     print data
-#     lock_json = action_server(token['id'], token['tenant']['id'], servers_id, data)
-#     return json.dumps(lock_json)
-#
-#
-# @main.route('/server/unlock/<servers_id>', methods=["POST"])
-# def unlock_server(servers_id):
-#     token = json.loads(request.args.get('token'))
-#     data = request.json
-#     print data
-#     unlock_json = action_server(token['id'], token['tenant']['id'], servers_id, data)
-#     return json.dumps(unlock_json)
-#
-#
-# @main.route('/server/reboot_hard/<servers_id>', methods=["POST"])
-# def reboot_hard_server(servers_id):
-#     token = json.loads(request.args.get('token'))
-#     data = request.json
-#     print data
-#     reboot_hard_json = action_server(token['id'], token['tenant']['id'], servers_id, data)
-#     return json.dumps(reboot_hard_json)
-#
-#
-# @main.route('/server/reboot_hard/<servers_id>', methods=["POST"])
-# def reboot_soft_server(servers_id):
-#     token = json.loads(request.args.get('token'))
-#     data = request.json
-#     print data
-#     reboot_soft_json = action_server(token['id'], token['tenant']['id'], servers_id, data)
-#     return json.dumps(reboot_soft_json)
-#
-#
-# @main.route('/server/stop/<servers_id>', methods=["POST"])
-# def stop_server(servers_id):
-#     token = json.loads(request.args.get('token'))
-#     data = request.json
-#     print data
-#     stop_json = action_server(token['id'], token['tenant']['id'], servers_id, data)
-#     return json.dumps(stop_json)
-#
-#
-# @main.route('/server/start/<servers_id>', methods=["POST"])
-# def start_server(servers_id):
-#     token = json.loads(request.args.get('token'))
-#     data = request.json
-#     print data
-#     start_json = action_server(token['id'], token['tenant']['id'], servers_id, data)
-#     return json.dumps(start_json)
 
 
 @main.route('/servers_action/<servers_id>', methods=["POST"])
@@ -716,6 +600,32 @@ def delete_keypairs():
     return json.dumps(del_status)
 
 
+@main.route('/user/create', methods=["POST"])
+def create_user_info():
+    token = json.loads(request.args.get('token'))
+    user_data = request.json
+    user_json = create_user(token, json.dumps(user_data))
+    return json.dumps(user_json)
 
 
+@main.route('/user/update/<user_id>', methods=["POST"])
+def update_user_info(user_id):
+    token = json.loads(request.args.get('token'))
+    data = request.json
+    print json.dumps(data)
+    user_json = update_user(token, user_id, data)
+    return json.dumps(user_json)
 
+
+@main.route('/user/delete/<user_id>')
+def delete_user_info(user_id):
+    token = json.loads(request.args.get('token'))
+    delete_json = delete_user(token, user_id)
+    return delete_json
+
+
+@main.route('/user/detail/<user_id>')
+def get_detail_user_info(user_id):
+    token = json.loads(request.args.get('token'))
+    detail_json = get_users_detail(token, user_id)
+    return detail_json

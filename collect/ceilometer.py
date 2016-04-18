@@ -6,19 +6,19 @@ from settings import *
 def get_localtime():
     """获取当前时间"""
     ISOTIMEFORMAT = '%Y-%m-%d %X'
-    total_time = time.strftime(ISOTIMEFORMAT,time.localtime())
+    total_time = time.strftime(ISOTIMEFORMAT, time.localtime())
     return total_time
 
 
 def time_to_isostring(s):
     """把一个时间转换成秒"""
-    d = datetime.datetime.strptime(s,"%Y-%m-%d %H:%M:%S")
+    d = datetime.datetime.strptime(s, "%Y-%m-%d %H:%M:%S")
     return time.mktime(d.timetuple())
 
 
 def isostring_to_time(s):
     """把秒数转换成一个时间"""
-    return time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(float(s)))
+    return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(float(s)))
 
 
 def get_meter_func_data(token_id, instance_id, meter_name, type):

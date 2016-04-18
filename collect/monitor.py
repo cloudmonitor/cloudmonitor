@@ -10,6 +10,7 @@ from settings import *
 from securitygroup import *
 from quota import *
 from keypair import *
+from util import *
 
 
 
@@ -21,8 +22,10 @@ if __name__ == "__main__":
     # 通过用户和密码获取token
     token_json = get_user_token("user01", "user01")
     #print json.dumps(token_json)
-
+    admin_json = get_admin_token()
+    token = token_json['access']['token']
     token_id = token_json['access']['token']['id']
+    admin_token_id = admin_json['access']['token']['id']
     # 获取租户
     # print get_tenants(token_id)
     # tenant_name = get_tenants(token_id)['tenants'][0]['name']
@@ -52,5 +55,8 @@ if __name__ == "__main__":
     #print json.dumps(get_last_network_topology(token_id,tenant_id))
     #print json.dumps(get_subnet_servers(token_id,tenant_id, "a5668f7b-7e92-4dae-9fda-537976fc7cd1"))
     #print json.dumps(get_tuopu_subnet_info(token_id))
-    print json.dumps(get_last_network_topology(token_id, tenant_id))
+    #print json.dumps(get_last_network_topology(token_id, tenant_id))
     #print json.dumps(network_subnet(token_id))
+    # print admin_token_id
+    # print json.dumps(get_users_list(admin_token_id))
+    print auth_is_available(token)
