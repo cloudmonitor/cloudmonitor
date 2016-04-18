@@ -1,14 +1,7 @@
 # _*_ coding:utf-8 _*_
 from util import auth_is_available
 from settings import *
-
-
-def get_admin_token():
-    """"获取admin的token"""
-    credential = CREDENTIAL_PASSWORD % ('admin', 'admin', 'admin')
-    headers = {"Content-type": "application/json", "Accept": "application/json"}
-    r = requests.post(KEYSTONE_ENDPOINT+'/tokens', data=credential, headers=headers)
-    return r.json()
+from identify import get_admin_token
 
 
 def get_users_list(admin_token_id):

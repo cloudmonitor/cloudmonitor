@@ -59,4 +59,5 @@ if __name__ == "__main__":
     #print json.dumps(network_subnet(token_id))
     # print admin_token_id
     # print json.dumps(get_users_list(admin_token_id))
-    print auth_is_available(token)
+    # print auth_is_available(token)
+    print json.dumps(get_tenant_quota(tenant_id))

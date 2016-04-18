@@ -629,3 +629,10 @@ def get_detail_user_info(user_id):
     token = json.loads(request.args.get('token'))
     detail_json = get_users_detail(token, user_id)
     return detail_json
+
+
+@main.route('/tenant_quota/<tenant_id>')
+def get_tenant_quota_info(tenant_id):
+    token = json.loads(request.args.get('token'))
+    tenant_quota_json = get_tenant_quota(token, tenant_id)
+    return tenant_quota_json

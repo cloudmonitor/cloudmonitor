@@ -13,6 +13,14 @@ def get_user_token(username, password):
     return r.json()
 
 
+def get_admin_token():
+    """"获取admin的token"""
+    credential = CREDENTIAL_PASSWORD % ('admin', 'admin', 'admin')
+    headers = {"Content-type": "application/json", "Accept": "application/json"}
+    r = requests.post(KEYSTONE_ENDPOINT+'/tokens', data=credential, headers=headers)
+    return r.json()
+
+
 def get_tenant_token(tenantname, token):
     """获取指定租户、用户名、密码的TOKEN,返回json"""
     credential = CREDENTIAL_TOKEN % (tenantname, token)
