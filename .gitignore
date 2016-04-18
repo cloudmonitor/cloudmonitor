@@ -37,6 +37,7 @@ nosetests.xml
 .pydevproject
 
 #deployment
+.env
 cloudmonitor.log
 cloudmonitor.sock
 config.ini
