@@ -9,6 +9,7 @@ from collect.firewall import *
 from collect.floatingip import *
 from collect.images import *
 from collect.user import *
+from collect.util import *
 # from collect.monitor import get_tenant_token, get_tenants, get_tenant_instances, get_tenant_instance,\
 #                             get_tenant_limits, get_user_token, get_tenant_flavors, get_tenant_ports, \
 #                             get_tenant_networks, get_tenant_subnets, get_tenant_routers, get_one_firewalls_info,\
@@ -26,6 +27,7 @@ def login():
 
 
 @main.route('/tenants')
+@auth_is_available
 def front_get_tenants():
     token = json.loads(request.args.get('token'))
     tenants_json = get_tenants(token['id'])
@@ -33,6 +35,7 @@ def front_get_tenants():
 
 
 @main.route('/tenant/login')
+@auth_is_available
 def front_get_tenant_token():
     token = json.loads(request.args.get('token'))
     tenantname = request.args.get('tenantname')
@@ -41,6 +44,7 @@ def front_get_tenant_token():
 
 
 @main.route('/limits')
+@auth_is_available
 def front_get_tenant_limits():
     token = json.loads(request.args.get('token'))
     limits_json = get_tenant_limits(token['id'], token['tenant']['id'])
@@ -48,6 +52,7 @@ def front_get_tenant_limits():
 
 
 @main.route('/instances')
+@auth_is_available
 def front_get_tenant_instances():
     token = json.loads(request.args.get('token'))
     vms_json = get_tenant_instances(token['id'], token['tenant']['id'])
@@ -55,6 +60,7 @@ def front_get_tenant_instances():
 
 
 @main.route('/instance/interfaces/<servers_id>')
+@auth_is_available
 def front_get_instance_interfaces(servers_id):
     token = json.loads(request.args.get('token'))
     inter_json = get_server_interface(token['id'], token['tenant']['id'], servers_id)
@@ -62,6 +68,7 @@ def front_get_instance_interfaces(servers_id):
 
 
 @main.route('/servers/create', methods=["POST"])
+@auth_is_available
 def create_servers_info():
     token = json.loads(request.args.get('token'))
     servers_data = request.json
@@ -71,6 +78,7 @@ def create_servers_info():
 
 
 @main.route('/servers/update/<servers_id>', methods=["POST"])
+@auth_is_available
 def update_servers_info(servers_id):
     token = json.loads(request.args.get('token'))
     server = request.json
@@ -79,6 +87,7 @@ def update_servers_info(servers_id):
 
 
 @main.route('/servers/delete', methods=["POST"])
+@auth_is_available
 def delete_servers_info():
     token = json.loads(request.args.get('token'))
     servers_id_list = request.json
@@ -88,6 +97,7 @@ def delete_servers_info():
 
 
 @main.route('/interfaces/bind/<servers_id>', methods=["POST"])
+@auth_is_available
 def bind_interfaces_info(servers_id):
     token = json.loads(request.args.get('token'))
     data = request.json
@@ -97,6 +107,7 @@ def bind_interfaces_info(servers_id):
 
 
 @main.route('/interfaces/delete/<servers_id>', methods=["POST"])
+@auth_is_available
 def delete_interfaces_info(servers_id):
     token = json.loads(request.args.get('token'))
     interfaces = request.json
@@ -105,6 +116,7 @@ def delete_interfaces_info(servers_id):
 
 
 @main.route('/sever_sg/<servers_id>')
+@auth_is_available
 def server_sg(servers_id):
     token = json.loads(request.args.get('token'))
     server_sg_json = server_security_group(token['id'], token['tenant']['id'], servers_id)
@@ -112,6 +124,7 @@ def server_sg(servers_id):
 
 
 @main.route('/disserver_sg/<servers_id>')
+@auth_is_available
 def disserver_sg(servers_id):
     token = json.loads(request.args.get('token'))
     disserver_sg_json = disserver_security_group(token['id'], token['tenant']['id'], servers_id)
@@ -119,6 +132,7 @@ def disserver_sg(servers_id):
 
 
 @main.route('/sever_sg/update/<server_id>', methods=["POST"])
+@auth_is_available
 def bind_security_group_info(server_id):
     token = json.loads(request.args.get('token'))
     data = request.json
@@ -128,6 +142,7 @@ def bind_security_group_info(server_id):
 
 
 @main.route('/servers_action/<servers_id>', methods=["POST"])
+@auth_is_available
 def servers_action_info(servers_id):
     token = json.loads(request.args.get('token'))
     data = request.json
@@ -137,6 +152,7 @@ def servers_action_info(servers_id):
 
 
 @main.route('/flavors')
+@auth_is_available
 def front_get_tenant_flavors():
     token = json.loads(request.args.get('token'))
     flavors_json = get_tenant_flavors(token['id'], token['tenant']['id'])
@@ -144,6 +160,7 @@ def front_get_tenant_flavors():
 
 
 @main.route('/tenant_limits')
+@auth_is_available
 def front_get_limits():
     token = json.loads(request.args.get('token'))
     limits_json = get_tenant_limits(token['id'], token['tenant']['id'])
@@ -151,6 +168,7 @@ def front_get_limits():
 
 
 @main.route('/os_availability_zone')
+@auth_is_available
 def front_get_os_availability_zone():
     token = json.loads(request.args.get('token'))
     zone_json = get_tenant_os_availability_zone(token['id'], token['tenant']['id'])
@@ -158,6 +176,7 @@ def front_get_os_availability_zone():
 
 
 @main.route('/images')
+@auth_is_available
 def front_get_images():
     token = json.loads(request.args.get('token'))
     images_json = get_tenant_images(token['id'])
@@ -165,6 +184,7 @@ def front_get_images():
 
 
 @main.route('/instances/<instance_id>')
+@auth_is_available
 def front_get_tenant_instance(instance_id):
     token = json.loads(request.args.get('token'))
     vm_json = get_tenant_instance(token['id'], token['tenant']['id'], instance_id)
@@ -172,6 +192,7 @@ def front_get_tenant_instance(instance_id):
 
 
 @main.route('/networks')
+@auth_is_available
 def front_get_tenant_networks():
     token = json.loads(request.args.get('token'))
     networks_json = get_tenant_networks(token['id'])
@@ -179,6 +200,7 @@ def front_get_tenant_networks():
 
 
 @main.route('/all_networks')
+@auth_is_available
 def front_get_all_networks():
     token = json.loads(request.args.get('token'))
     networks_json = get_all_networks(token['id'])
@@ -186,6 +208,7 @@ def front_get_all_networks():
 
 
 @main.route('/extnet')
+@auth_is_available
 def front_get_tenant_extnet():
     token = json.loads(request.args.get('token'))
     extnet_json = get_tenant_ext_net(token['id'])
@@ -193,6 +216,7 @@ def front_get_tenant_extnet():
 
 
 @main.route('/subnets')
+@auth_is_available
 def front_get_tenant_subnets():
     token = json.loads(request.args.get('token'))
     subnets_json = get_tenant_subnets(token['id'])
@@ -200,6 +224,7 @@ def front_get_tenant_subnets():
 
 
 @main.route('/new_subnets')
+@auth_is_available
 def front_get_tenant_new_subnets():
     token = json.loads(request.args.get('token'))
     subnets_json = get_new_subnets(token['id'])
@@ -207,6 +232,7 @@ def front_get_tenant_new_subnets():
 
 
 @main.route('/ports')
+@auth_is_available
 def front_get_tenant_ports():
     token = json.loads(request.args.get('token'))
     ports_json = get_tenant_ports(token['id'])
@@ -214,6 +240,7 @@ def front_get_tenant_ports():
 
 
 @main.route('/router_ports/<router_id>')
+@auth_is_available
 def front_get_router_ports(router_id):
     token = json.loads(request.args.get('token'))
     router_ports_json = get_router_ports(token['id'], router_id)
@@ -221,13 +248,23 @@ def front_get_router_ports(router_id):
 
 
 @main.route('/routers')
+@auth_is_available
 def front_get_tenant_routers():
     token = json.loads(request.args.get('token'))
     routers_json = get_tenant_routers(token['id'])
     return json.dumps(routers_json)
 
 
+@main.route('/router_table/<router_id>')
+@auth_is_available
+def front_get_router_table(router_id):
+    token = json.loads(request.args.get('token'))
+    router_table_json = get_route_table(token['id'], router_id)
+    return json.dumps(router_table_json)
+
+
 @main.route('/floatingips')
+@auth_is_available
 def get_floatingips_info():
     token = json.loads(request.args.get('token'))
     floatingip_json = get_floating_ips(token["id"])
@@ -235,6 +272,7 @@ def get_floatingips_info():
 
 
 @main.route('/dis_floatingips')
+@auth_is_available
 def get_dis_floatingips_info():
     token = json.loads(request.args.get('token'))
     floatingip_json = get_disallocate_floating_ips(token["id"])
@@ -242,6 +280,7 @@ def get_dis_floatingips_info():
 
 
 @main.route('/floatingips/allocate', methods=["POST"])
+@auth_is_available
 def allocate_floatingips():
     token = json.loads(request.args.get('token'))
     data = json.dumps(request.json)
@@ -251,6 +290,7 @@ def allocate_floatingips():
 
 
 @main.route('/floatingips/release', methods=["POST"])
+@auth_is_available
 def release_floatingips():
     token = json.loads(request.args.get('token'))
     data = request.json
@@ -259,6 +299,7 @@ def release_floatingips():
 
 
 @main.route('/floatingips/associate/<floatingip_id>', methods=["POST"])
+@auth_is_available
 def associate_floatingips(floatingip_id):
     token = json.loads(request.args.get('token'))
     data = json.dumps(request.json)
@@ -267,6 +308,7 @@ def associate_floatingips(floatingip_id):
 
 
 @main.route('/floatingips/disassociateport')
+@auth_is_available
 def disassociate_floatingips_port():
     token = json.loads(request.args.get('token'))
     disassociateport_json = get_disassociate_floatingip_port(token["id"])
@@ -274,6 +316,7 @@ def disassociate_floatingips_port():
 
 
 @main.route('/security_groups')
+@auth_is_available
 def get_security_groups_info():
     token = json.loads(request.args.get('token'))
     security_groups_json = get_security_groups(token["id"])
@@ -281,6 +324,7 @@ def get_security_groups_info():
 
 
 @main.route('/security_groups/create', methods=['POST'])
+@auth_is_available
 def create_sgs():
     token = json.loads(request.args.get('token'))
     sg = request.json
@@ -289,6 +333,7 @@ def create_sgs():
 
 
 @main.route('/security_groups/delete', methods=["POST"])
+@auth_is_available
 def delete_sgs():
     token = json.loads(request.args.get('token'))
     sg_id_list = request.json
@@ -298,6 +343,7 @@ def delete_sgs():
 
 
 @main.route('/security_groups/update/<sg_id>', methods=['POST'])
+@auth_is_available
 def update_sg(sg_id):
     token = json.loads(request.args.get('token'))
     sg = request.json
@@ -306,6 +352,7 @@ def update_sg(sg_id):
 
 
 @main.route('/sg_rules/delete', methods=["POST"])
+@auth_is_available
 def delete_sgs_rules():
     token = json.loads(request.args.get('token'))
     sg_rules_id_list = request.json
@@ -314,6 +361,7 @@ def delete_sgs_rules():
 
 
 @main.route('/sg_rules/create', methods=["POST"])
+@auth_is_available
 def create_sgs_rules():
     token = json.loads(request.args.get('token'))
     rule = request.json
@@ -322,6 +370,7 @@ def create_sgs_rules():
 
 
 @main.route('/firewalls')
+@auth_is_available
 def get_all_firewall():
     token = json.loads(request.args.get('token'))
     firewall_json = get_tenant_firewalls(token['id'])
@@ -329,6 +378,7 @@ def get_all_firewall():
 
 
 @main.route('/firewall_rules')
+@auth_is_available
 def get_fw_rules():
     token = json.loads(request.args.get('token'))
     rule_json = get_tenant_firewall_rules(token['id'])
@@ -336,6 +386,7 @@ def get_fw_rules():
 
 
 @main.route('/firewall_rules/create', methods=["POST"])
+@auth_is_available
 def create_fw_rule():
     token = json.loads(request.args.get('token'))
     rule = request.json
@@ -344,6 +395,7 @@ def create_fw_rule():
 
 
 @main.route('/firewall_rules/delete', methods=["POST"])
+@auth_is_available
 def delete_fw_rule():
     token = json.loads(request.args.get('token'))
     rule_id_list = request.json
@@ -352,6 +404,7 @@ def delete_fw_rule():
 
 
 @main.route('/firewall_rules/update/<firewall_rules_id>', methods=["POST"])
+@auth_is_available
 def update_fw_rule(firewall_rules_id):
     token = json.loads(request.args.get('token'))
     rule = request.json
@@ -361,6 +414,7 @@ def update_fw_rule(firewall_rules_id):
 
 
 @main.route('/firewall_policies')
+@auth_is_available
 def get_all_policy():
     token = json.loads(request.args.get('token'))
     policy_json = get_tenant_firewall_policies(token['id'])
@@ -368,6 +422,7 @@ def get_all_policy():
 
 
 @main.route('/firewall_policies/create', methods=["POST"])
+@auth_is_available
 def policy_create():
     token = json.loads(request.args.get('token'))
     policy_data = request.json
@@ -376,6 +431,7 @@ def policy_create():
 
 
 @main.route('/firewall_policies/update/<firewall_policies_id>', methods=["POST"])
+@auth_is_available
 def update_policies(firewall_policies_id):
     token = json.loads(request.args.get('token'))
     policy = request.json
@@ -384,6 +440,7 @@ def update_policies(firewall_policies_id):
 
 
 @main.route('/firewall_policies/delete', methods=["POST"])
+@auth_is_available
 def delete_policies():
     token = json.loads(request.args.get('token'))
     policies_id_list = request.json
@@ -393,6 +450,7 @@ def delete_policies():
 
 
 @main.route('/firewall_policies/insert_rule/<policy_id>', methods=["POST"])
+@auth_is_available
 def insert_rule(policy_id):
     token = json.loads(request.args.get('token'))
     rule_data = request.json
@@ -401,6 +459,7 @@ def insert_rule(policy_id):
 
 
 @main.route('/firewall_policies/remove_rule/<policy_id>', methods=["POST"])
+@auth_is_available
 def remove_rule(policy_id):
     token = json.loads(request.args.get('token'))
     rule_data = request.json
@@ -409,6 +468,7 @@ def remove_rule(policy_id):
 
 
 @main.route('/firewall/create', methods=["POST"])
+@auth_is_available
 def create_fw():
     token = json.loads(request.args.get('token'))
     firewll_info = request.json
@@ -417,6 +477,7 @@ def create_fw():
 
 
 @main.route('/firewall/update/<firewall_id>', methods=["POST"])
+@auth_is_available
 def update_fw(firewall_id):
     token = json.loads(request.args.get('token'))
     firewall = request.json
@@ -425,6 +486,7 @@ def update_fw(firewall_id):
 
 
 @main.route('/firewall/delete', methods=["POST"])
+@auth_is_available
 def delete_fw():
     token = json.loads(request.args.get('token'))
     firewalls_id_list = request.json
@@ -434,6 +496,7 @@ def delete_fw():
 
 
 @main.route('/firewall/<firewall_id>')
+@auth_is_available
 def get_firewall_info(firewall_id):
     token = json.loads(request.args.get('token'))
     firewall_info_json = get_tenant_firewall(token['id'], firewall_id)
@@ -441,6 +504,7 @@ def get_firewall_info(firewall_id):
 
 
 @main.route('/monitor/<instance_id>/<meter_name>/<type>')
+@auth_is_available
 def get_monitor_network(instance_id, meter_name, type):
     token = json.loads(request.args.get('token'))
     r = get_meter_func_data(token['id'], instance_id, meter_name, type)
@@ -448,6 +512,7 @@ def get_monitor_network(instance_id, meter_name, type):
 
 
 @main.route('/tuopu')
+@auth_is_available
 def get_tuopu():
     token = json.loads(request.args.get('token'))
     r = get_last_network_topology(token['id'], token["tenant"]["id"])
@@ -455,6 +520,7 @@ def get_tuopu():
 
 
 @main.route('/network/create', methods=["POST"])
+@auth_is_available
 def create_net():
     token = json.loads(request.args.get('token'))
     network_data = request.json
@@ -463,6 +529,7 @@ def create_net():
 
 
 @main.route('/network/update/<network_id>', methods=["POST"])
+@auth_is_available
 def update_net(network_id):
     token = json.loads(request.args.get('token'))
     network = request.json
@@ -471,6 +538,7 @@ def update_net(network_id):
 
 
 @main.route('/network/delete', methods=["POST"])
+@auth_is_available
 def delete_net():
     token = json.loads(request.args.get('token'))
     network_id_list = request.json
@@ -479,6 +547,7 @@ def delete_net():
 
 
 @main.route('/subnet/create', methods=["POST"])
+@auth_is_available
 def create_subnet_info():
     token = json.loads(request.args.get('token'))
     subnet_data = request.json
@@ -489,6 +558,7 @@ def create_subnet_info():
 
 
 @main.route('/subnet/update/<subnet_id>', methods=["POST"])
+@auth_is_available
 def update_subnet_info(subnet_id):
     token = json.loads(request.args.get('token'))
     subnet = request.json
@@ -497,6 +567,7 @@ def update_subnet_info(subnet_id):
 
 
 @main.route('/subnet/delete', methods=["POST"])
+@auth_is_available
 def delete_subnet_info():
     token = json.loads(request.args.get('token'))
     subnet_id_list = request.json
@@ -506,6 +577,7 @@ def delete_subnet_info():
 
 
 @main.route('/port/create', methods=["POST"])
+@auth_is_available
 def create_port_info():
     token = json.loads(request.args.get('token'))
     port_data = request.json
@@ -514,6 +586,7 @@ def create_port_info():
 
 
 @main.route('/port/update/<port_id>', methods=["POST"])
+@auth_is_available
 def update_port_info(port_id):
     token = json.loads(request.args.get('token'))
     port = request.json
@@ -522,6 +595,7 @@ def update_port_info(port_id):
 
 
 @main.route('/port/delete', methods=["POST"])
+@auth_is_available
 def delete_port_info():
     token = json.loads(request.args.get('token'))
     port_id_list = request.json
@@ -531,6 +605,7 @@ def delete_port_info():
 
 
 @main.route('/router/create', methods=["POST"])
+@auth_is_available
 def create_router_info():
     token = json.loads(request.args.get('token'))
     router_data = request.json
@@ -539,6 +614,7 @@ def create_router_info():
 
 
 @main.route('/router/update/<router_id>', methods=["POST"])
+@auth_is_available
 def update_router_info(router_id):
     token = json.loads(request.args.get('token'))
     router = request.json
@@ -547,6 +623,7 @@ def update_router_info(router_id):
 
 
 @main.route('/routers/disconnect_subnet')
+@auth_is_available
 def disconnect_subnet_info():
     token = json.loads(request.args.get('token'))
     dissubnet_json = disconnect_subnet(token['id'])
@@ -554,6 +631,7 @@ def disconnect_subnet_info():
 
 
 @main.route('/router/delete', methods=["POST"])
+@auth_is_available
 def delete_router_info():
     token = json.loads(request.args.get('token'))
     router_id_list = request.json
@@ -562,6 +640,7 @@ def delete_router_info():
 
 
 @main.route('/router/<router_id>/add_router_interface', methods=["POST"])
+@auth_is_available
 def add_router_inter(router_id):
     token = json.loads(request.args.get('token'))
     subnet = request.json
@@ -570,6 +649,7 @@ def add_router_inter(router_id):
 
 
 @main.route('/router/<router_id>/remove_router_interface', methods=["POST"])
+@auth_is_available
 def remove_router_inter(router_id):
     token = json.loads(request.args.get('token'))
     subnet = request.json
@@ -578,6 +658,7 @@ def remove_router_inter(router_id):
 
 
 @main.route('/keypairs')
+@auth_is_available
 def get_keypairs():
     token = json.loads(request.args.get('token'))
     keypairs = get_tenant_keypairs(token['id'], token["tenant"]["id"])
@@ -585,6 +666,7 @@ def get_keypairs():
 
 
 @main.route('/keypairs/create', methods=["POST"])
+@auth_is_available
 def create_keypairs():
     token = json.loads(request.args.get('token'))
     data = json.dumps(request.json)
@@ -593,6 +675,7 @@ def create_keypairs():
 
 
 @main.route('/keypairs/delete', methods=["POST"])
+@auth_is_available
 def delete_keypairs():
     token = json.loads(request.args.get('token'))
     keypairs_name = request.json
@@ -601,6 +684,7 @@ def delete_keypairs():
 
 
 @main.route('/user/create', methods=["POST"])
+@auth_is_available
 def create_user_info():
     token = json.loads(request.args.get('token'))
     user_data = request.json
@@ -609,6 +693,7 @@ def create_user_info():
 
 
 @main.route('/user/update/<user_id>', methods=["POST"])
+@auth_is_available
 def update_user_info(user_id):
     token = json.loads(request.args.get('token'))
     data = request.json
@@ -618,6 +703,7 @@ def update_user_info(user_id):
 
 
 @main.route('/user/delete/<user_id>')
+@auth_is_available
 def delete_user_info(user_id):
     token = json.loads(request.args.get('token'))
     delete_json = delete_user(token, user_id)
@@ -625,6 +711,7 @@ def delete_user_info(user_id):
 
 
 @main.route('/user/detail/<user_id>')
+@auth_is_available
 def get_detail_user_info(user_id):
     token = json.loads(request.args.get('token'))
     detail_json = get_users_detail(token, user_id)
@@ -632,7 +719,7 @@ def get_detail_user_info(user_id):
 
 
 @main.route('/tenant_quota/<tenant_id>')
+@auth_is_available
 def get_tenant_quota_info(tenant_id):
-    token = json.loads(request.args.get('token'))
-    tenant_quota_json = get_tenant_quota(token, tenant_id)
+    tenant_quota_json = get_tenant_quota(tenant_id)
     return tenant_quota_json

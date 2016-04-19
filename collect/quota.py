@@ -5,6 +5,8 @@ from settings import *
 from floatingip import get_floating_ips
 from securitygroup import get_security_groups
 from identify import get_admin_token
+from util import auth_is_available
+
 
 def get_tenant_limits(token_id, tenant_id):
     """获取租户的资源配额限制"""
@@ -60,7 +62,16 @@ def _get_network_quota(tenant_id):
     return network_info
 
 
-def get_tenant_quota(token,tenant_id):
+@auth_is_available
+def get_tenant_quota(tenant_id):
+    """获取跟租户相关的配额信息"""
+    compute_info = _get_compute_quota(tenant_id)
+    network_info = _get_network_quota(tenant_id)
+    tenant_quota = dict(network_info, **compute_info)
+    return tenant_quota
+
+
+def get_tenant_quota_bak(token,tenant_id):
     """获取跟租户相关的配额信息"""
     if auth_is_available(token):
         compute_info = _get_compute_quota(tenant_id)

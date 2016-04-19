@@ -11,6 +11,7 @@ from securitygroup import *
 from quota import *
 from keypair import *
 from util import *
+from user import *
 
 
 
@@ -21,7 +22,6 @@ if __name__ == "__main__":
 
     # 通过用户和密码获取token
     token_json = get_user_token("user01", "user01")
-    #print json.dumps(token_json)
     admin_json = get_admin_token()
     token = token_json['access']['token']
     token_id = token_json['access']['token']['id']
@@ -60,4 +60,5 @@ if __name__ == "__main__":
     # print admin_token_id
     # print json.dumps(get_users_list(admin_token_id))
     # print auth_is_available(token)
-    print json.dumps(get_tenant_quota(tenant_id))
+    print json.dumps(get_tenant_quota(token, tenant_id))
+    #print json.dumps(update_user(token, token_id,'{"user": {"username": "user01","name": "user01","enabled": true,"email": null}}'))

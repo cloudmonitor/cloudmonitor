@@ -207,6 +207,16 @@ def delete_router(token_id, router_id_list):
     return delete_status
 
 
+def get_route_table(token_id, router_id):
+    """获取某一路由的路由表"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = NEUTRON_ENDPOINT + '/routers/' + router_id
+    r = requests.get(url=url, headers=headers)
+    router_info = r.json()
+    router_table = router_info['router']['routes']
+    return router_table
+
+
 def disconnect_subnet(token_id):
     """没有关联到路由器的子网"""
     port_info = get_tenant_ports(token_id)
