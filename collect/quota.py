@@ -62,7 +62,6 @@ def _get_network_quota(tenant_id):
     return network_info
 
 
-@auth_is_available
 def get_tenant_quota(tenant_id):
     """获取跟租户相关的配额信息"""
     compute_info = _get_compute_quota(tenant_id)
@@ -80,3 +79,5 @@ def get_tenant_quota_bak(token,tenant_id):
         return tenant_quota
     else:
         return json.loads('{"error":"not available"}')
+
+
