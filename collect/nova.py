@@ -128,22 +128,26 @@ def create3_servers(token_id, tenant_id, servers_data):
 
 def create2_servers(token_id, tenant_id, servers_data):
     """创建指定子网的虚拟机"""
+    from neutron import create_port
     servers_data = json.loads(servers_data)
     network_info = servers_data['server'].pop('network_info')
     for i in range(len(network_info)):
         network_id = network_info[i]["network_id"]
         subnet_id = network_info[i]["subnet_id"]
         port_data = '{"port": {"network_id": "%s","fixed_ips": [{"subnet_id": "%s"}]}}' % (network_id, subnet_id)
+        print port_data
         port_r = create_port(token_id, port_data)
         print port_r
         port_id = port_r['port']['id']
         for j in range(len(servers_data['server']['networks'])):
             if network_id == servers_data['server']['networks'][j]['uuid']:
                 servers_data['server']['networks'][j]['port'] = port_id
+    print servers_data
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     url = NOVA_ENDPOINT.format(tenant_id=tenant_id) + "/servers"
     server_r = requests.post(url=url, data=json.dumps(servers_data), headers=headers)
-    server_r = server_r.status_code
+    # server_r = server_r.status_code
+    server_r = server_r.json()
     return server_r
 
 

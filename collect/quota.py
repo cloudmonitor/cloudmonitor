@@ -1,6 +1,6 @@
 # _*_ coding:utf-8 _*_
 
-
+from flask import request
 from settings import *
 from floatingip import get_floating_ips
 from securitygroup import get_security_groups
@@ -68,7 +68,7 @@ def get_tenant_quota(tenant_id):
     compute_info = _get_compute_quota(tenant_id)
     network_info = _get_network_quota(tenant_id)
     tenant_quota = dict(network_info, **compute_info)
-    return tenant_quota
+    return json.dumps(tenant_quota)
 
 
 def get_tenant_quota_bak(token,tenant_id):

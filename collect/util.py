@@ -1,7 +1,14 @@
 # _*_ coding:utf-8 _*_
+
+import datetime, time
+import functools
+
+from flask import request
+
 from settings import *
 from ceilometer import get_localtime,localtime_to_utc
-import datetime, time
+
+
 THREE_HOUR = 28740
 
 
@@ -21,6 +28,7 @@ def auth_is_available_bak(token):
 
 def auth_is_available(func):
     """认证admin_token是否有效的装饰器"""
+    @functools.wraps(func)
     def authority(*args, **kwargs):
         token = json.loads(request.args.get('token'))
         date_time = time.strptime(str(datetime.datetime.now())[:16], "%Y-%m-%d %H:%M")
