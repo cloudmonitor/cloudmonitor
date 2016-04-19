@@ -41,5 +41,5 @@ nosetests.xml
 cloudmonitor.log
 cloudmonitor.sock
 config.ini
-
+logs
 
