@@ -21,6 +21,7 @@ def login():
 
 
 @main.route('/tenants')
+@auth_is_available
 def front_get_tenants():
     token = json.loads(request.args.get('token'))
     tenants_json = get_tenants(token['id'])
@@ -28,7 +29,7 @@ def front_get_tenants():
 
 
 @main.route('/tenant/login')
-# @auth_is_available
+@auth_is_available
 def front_get_tenant_token():
     token = json.loads(request.args.get('token'))
     tenantname = request.args.get('tenantname')
@@ -37,7 +38,7 @@ def front_get_tenant_token():
 
 
 @main.route('/limits')
-# @auth_is_available
+@auth_is_available
 def front_get_tenant_limits():
     token = json.loads(request.args.get('token'))
     limits_json = get_tenant_limits(token['id'], token['tenant']['id'])
@@ -45,7 +46,7 @@ def front_get_tenant_limits():
 
 
 @main.route('/instances')
-# @auth_is_available
+@auth_is_available
 def front_get_tenant_instances():
     token = json.loads(request.args.get('token'))
     vms_json = get_tenant_instances(token['id'], token['tenant']['id'])
@@ -53,7 +54,7 @@ def front_get_tenant_instances():
 
 
 @main.route('/instance/interfaces/<servers_id>')
-# @auth_is_available
+@auth_is_available
 def front_get_instance_interfaces(servers_id):
     token = json.loads(request.args.get('token'))
     inter_json = get_server_interface(token['id'], token['tenant']['id'], servers_id)
@@ -61,7 +62,7 @@ def front_get_instance_interfaces(servers_id):
 
 
 @main.route('/servers/create', methods=["POST"])
-# @auth_is_available
+@auth_is_available
 def create_servers_info():
     token = json.loads(request.args.get('token'))
     servers_data = request.json
@@ -71,7 +72,7 @@ def create_servers_info():
 
 
 @main.route('/servers/update/<servers_id>', methods=["POST"])
-# @auth_is_available
+@auth_is_available
 def update_servers_info(servers_id):
     token = json.loads(request.args.get('token'))
     server = request.json
@@ -129,7 +130,6 @@ def disserver_sg(servers_id):
 def bind_security_group_info(server_id):
     token = json.loads(request.args.get('token'))
     data = request.json
-    print data
     update_sg = server_update_sg(token['id'], token['tenant']['id'], server_id, data)
     return json.dumps(update_sg)
 
@@ -711,8 +711,17 @@ def get_detail_user_info(user_id):
     return detail_json
 
 
-@main.route('/tenant_quota/<tenant_id>')
+@main.route('/tenant_quota')
 @auth_is_available
-def get_tenant_quota_info(tenant_id):
-    tenant_quota_json = get_tenant_quota(tenant_id)
+def get_tenant_quota_info():
+    token = json.loads(request.args.get('token'))
+    tenant_quota_json = get_tenant_quota(token["tenant"]["id"])
     return tenant_quota_json
+
+
+@main.route('/tenant_used_info')
+@auth_is_available
+def get_tenant_used_info_test():
+    token = json.loads(request.args.get('token'))
+    tenant_used_json = get_tenant_used_info(token['id'], token["tenant"]["id"])
+    return json.dumps(tenant_used_json)

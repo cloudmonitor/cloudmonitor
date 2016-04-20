@@ -7,8 +7,6 @@ import copy
 from settings import *
 
 
-
-
 def get_tenant_networks(token_id):
     """获取租户的network"""
     network_info = get_all_networks(token_id)

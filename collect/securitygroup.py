@@ -38,6 +38,14 @@ def delete_security_group(token_id, sg_id_list):
     return sg_del_status
 
 
+def get_security_groups_rules(token_id):
+    """列出安全组规则的信息"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = NEUTRON_ENDPOINT + '/security-group-rules'
+    r = requests.get(url, headers=headers)
+    return r.json()
+
+
 def create_security_group_rules(token_id, data):
     """创建安全组规则"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}

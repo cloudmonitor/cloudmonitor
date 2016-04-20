@@ -30,6 +30,7 @@ def auth_is_available(func):
     """认证admin_token是否有效的装饰器"""
     @functools.wraps(func)
     def authority(*args, **kwargs):
+        error_info = {}
         token = json.loads(request.args.get('token'))
         date_time = time.strptime(str(datetime.datetime.now())[:16], "%Y-%m-%d %H:%M")
         issued_time = time.strptime(str(token['issued_at']).replace('T', ' ')[:16], "%Y-%m-%d %H:%M")
@@ -41,6 +42,7 @@ def auth_is_available(func):
             return_info = func(*args, **kwargs)
             return return_info
         else:
-            return '{"error":"not available"}'
+            error_info['error'] = 'not available'
+            return error_info
     return authority
 
