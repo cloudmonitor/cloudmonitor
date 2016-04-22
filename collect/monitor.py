@@ -65,3 +65,4 @@ if __name__ == "__main__":
     #print create3_servers(token_id, 'a731cb94fb094492a13bde53c243871e','{"server": {"name": "aaaaaa", "imageRef": "531260cd-b6dd-4deb-8fe8-677fbc69aa5d", "key_name": "wuhonglei", "flavorRef": "766df839-0045-4b3a-9e09-0fd8acfa1a7c", "networks": [{"uuid": "b47150a5-1beb-4281-bfc8-df29da938778"}], "max_count": 1, "network_info": [{"network_id": "b47150a5-1beb-4281-bfc8-df29da938778", "subnet_id": "ef0fc1b2-85be-4591-9f04-e5f950e7a405"}], "availability-zone": "", "security_groups": []}}')
     # print get_security_groups_rules(token_id)
     print get_tenant_used_info(token_id, tenant_id)
+    # print get_tenant_quota(tenant_id)

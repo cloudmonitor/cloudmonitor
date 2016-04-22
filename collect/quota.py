@@ -45,11 +45,8 @@ def _get_compute_quota(tenant_id):
     url = NOVA_ENDPOINT01+'/os-quota-sets/'+tenant_id + '/detail'
     r = requests.get(url, headers=headers)
     compute_quota_list = r.json()
-    compute_quota['metadata_items'] = compute_quota_list['quota_set']['metadata_items']['limit']
     compute_quota['cores'] = compute_quota_list['quota_set']['cores']['limit']
     compute_quota['instances'] = compute_quota_list['quota_set']['instances']['limit']
-    compute_quota['injected_files'] = compute_quota_list['quota_set']['injected_files']['limit']
-    compute_quota['injected_file_content_bytes'] = compute_quota_list['quota_set']['injected_file_content_bytes']['limit']
     compute_quota['ram'] = compute_quota_list['quota_set']['ram']['limit']
     return compute_quota
 
@@ -70,10 +67,15 @@ def _get_network_quota(tenant_id):
 
 def get_tenant_quota(tenant_id):
     """获取跟租户相关的配额信息"""
+    tenant_quota_info = {}
     compute_info = _get_compute_quota(tenant_id)
     network_info = _get_network_quota(tenant_id)
+    del network_info['tenant_id']
+    del network_info['rbac_policy']
+    del network_info['subnetpool']
     tenant_quota = dict(network_info, **compute_info)
-    return json.dumps(tenant_quota)
+    tenant_quota_info['total'] = tenant_quota
+    return tenant_quota_info
 
 
 def get_tenant_used_info(token_id, tenant_id):
@@ -92,7 +94,9 @@ def get_tenant_used_info(token_id, tenant_id):
     tenant_used_info["cores"] = tenant_limits['limits']['absolute']['totalCoresUsed']
     tenant_used_info["ram"] = tenant_limits['limits']['absolute']['totalRAMUsed']
     tenant_used['used'] = tenant_used_info
-    return tenant_used
+    tenant_info = get_tenant_quota(tenant_id)
+    tenant_quota_used = dict(tenant_used, **tenant_info)
+    return json.dumps(tenant_quota_used)
 
 
 

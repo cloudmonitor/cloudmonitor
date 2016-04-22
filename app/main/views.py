@@ -711,17 +711,9 @@ def get_detail_user_info(user_id):
     return detail_json
 
 
-@main.route('/tenant_quota')
+@main.route('/tenant_used_quota')
 @auth_is_available
-def get_tenant_quota_info():
-    token = json.loads(request.args.get('token'))
-    tenant_quota_json = get_tenant_quota(token["tenant"]["id"])
-    return tenant_quota_json
-
-
-@main.route('/tenant_used_info')
-@auth_is_available
-def get_tenant_used_info_test():
+def get_tenant_used_quota_info():
     token = json.loads(request.args.get('token'))
     tenant_used_json = get_tenant_used_info(token['id'], token["tenant"]["id"])
-    return json.dumps(tenant_used_json)
+    return tenant_used_json
