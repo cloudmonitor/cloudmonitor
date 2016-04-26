@@ -90,9 +90,12 @@ def network_subnet(token_id):
 def get_network_servers(token_id, tenant_id, network_id):
     """获取某租户下某网络下的虚拟机"""
     network_info = get_one_network(token_id, network_id)
+    # print json.dumps(network_info)
     servers_info = get_tenant_instances(token_id, tenant_id)
     network_servers_info = []
     for i in range(len(servers_info['servers'])):
+        if not servers_info['servers'][i]['addresses']:
+            continue
         if network_info['network']['name'] == servers_info['servers'][i]['addresses'].keys()[0]:
             network_servers_info.append(servers_info['servers'][i]['id'])
     return network_servers_info
@@ -117,7 +120,6 @@ def get_router_servers(token_id, tenant_id, router_id):
         network_servers = get_network_servers(token_id, tenant_id, router_network['networks_id'][i])
         for j in range(len(network_servers)):
             instance_info = get_tenant_instance(token_id, tenant_id, network_servers[j])
-            # print json.dumps(instance_info)
             for k in range(len(instance_info['server']['addresses'].values()[0])):
                 if instance_info['server']['addresses'].values()[0][k]['OS-EXT-IPS:type'] == "floating":
                     return False
