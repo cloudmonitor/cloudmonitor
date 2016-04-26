@@ -3,7 +3,6 @@
 from settings import *
 
 
-
 def get_tenant_instances(token_id, tenant_id):
     """获取某一租户下的所有vm"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}

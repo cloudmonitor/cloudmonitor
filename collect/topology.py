@@ -1,7 +1,8 @@
 # _*_ coding:utf-8 _*_
 
-from neutron import get_all_networks, get_tenant_subnets, get_tenant_routers, get_tenant_ports, get_tenant_networks
-from nova import get_tenant_instances
+from neutron import get_all_networks, get_tenant_subnets, get_tenant_routers, get_tenant_ports, get_tenant_networks, \
+    get_one_network, get_one_router
+from nova import get_tenant_instances,get_tenant_instance
 from settings import *
 
 SERVER_NUM = 0
@@ -13,14 +14,14 @@ CANVAS_X =700
 CANVAS_Y =700
 
 
-def _get_tuopu_port_info_bak(token_id):
-    """获取拓扑的端口信息 srcDeviceId是网络id,dstDeviceId是device_id"""
+def _get_tuopu_port_info(token_id, tenant_id):
+    """获取拓扑的端口信息 srcDeviceId是子网id,dstDeviceId是device_id"""
     ports_list = []
     all_port_info = get_tenant_ports(token_id)
-    #print json.dumps(all_port_info)
     for i in range(len(all_port_info['ports'])):
         port_info = {}
         if not all_port_info['ports'][i]['device_id'].startswith('dhcp') and not all_port_info['ports'][i]['device_owner'].startswith("network:router_interface"):
+            """子网与虚拟机的连线"""
             port_info["status"] = all_port_info['ports'][i]['status']
             port_info["srcDeviceId"] = all_port_info['ports'][i]['fixed_ips'][0]['subnet_id']
             port_info["url"] = ""
@@ -30,8 +31,16 @@ def _get_tuopu_port_info_bak(token_id):
             port_info["dstDeviceId"] = all_port_info['ports'][i]["device_id"]
             port_info["stroke"] = "blue"
             port_info["strokeWidth"] = 2
+            port_info["is_del"] = "True"
             ports_list.append(port_info)
         if not all_port_info['ports'][i]['device_id'].startswith('dhcp') and all_port_info['ports'][i]['device_owner'].startswith("network:router_interface"):
+            """路由器与网络连线"""
+            all_routers_info =get_tenant_routers(token_id)
+            for j in range(len(all_routers_info['routers'])):
+                if get_router_servers(token_id, tenant_id, all_routers_info['routers'][j]['id']):
+                    port_info["is_del"] = "True"
+                else:
+                    port_info["is_del"] = "False"
             port_info["status"] = all_port_info['ports'][i]['status']
             port_info["srcDeviceId"] = all_port_info['ports'][i]['network_id']
             port_info["url"] = ""
@@ -44,44 +53,13 @@ def _get_tuopu_port_info_bak(token_id):
             ports_list.append(port_info)
     all_routers_info = get_tenant_routers(token_id)
     for i in range(len(all_routers_info["routers"])):
-        # router_id = all_routers_info['routers'][i]['id']
-        # one_router_info = get_one_routers_info(token_id, router_id)
         if all_routers_info['routers'][i]["external_gateway_info"]:
+            """路由器与外网连线"""
             ex_port_info = {}
-            ex_port_info["srcDeviceId"] = all_routers_info['routers'][i]["external_gateway_info"]["network_id"]
-            ex_port_info["fixed_ips"] = all_routers_info['routers'][i]["external_gateway_info"]["external_fixed_ips"]
-            ex_port_info["id"] = "gateway"+all_routers_info['routers'][i]["external_gateway_info"]["network_id"]
-            ex_port_info["dstDeviceId"] = all_routers_info['routers'][i]["id"]
-            ex_port_info["stroke"] = "blue"
-            ex_port_info["strokeWidth"] = 2
-            ports_list.append(ex_port_info)
-    return ports_list
-
-
-def _get_tuopu_port_info(token_id):
-    """获取拓扑的端口信息"""
-    ports_list = []
-    all_port_info = get_tenant_ports(token_id)
-    #print json.dumps(all_port_info)
-    for i in range(len(all_port_info['ports'])):
-        port_info = {}
-        if not all_port_info['ports'][i]['device_id'].startswith('dhcp'):
-            port_info["status"] = all_port_info['ports'][i]['status']
-            port_info["srcDeviceId"] = all_port_info['ports'][i]['network_id']
-            port_info["url"] = ""
-            port_info["device_owner"] = all_port_info['ports'][i]["device_owner"]
-            port_info["fixed_ips"] = all_port_info['ports'][i]["fixed_ips"]
-            port_info["id"] = all_port_info['ports'][i]["id"]
-            port_info["dstDeviceId"] = all_port_info['ports'][i]["device_id"]
-            port_info["stroke"] = "blue"
-            port_info["strokeWidth"] = 2
-            ports_list.append(port_info)
-    all_routers_info = get_tenant_routers(token_id)
-    for i in range(len(all_routers_info["routers"])):
-        # router_id = all_routers_info['routers'][i]['id']
-        # one_router_info = get_one_routers_info(token_id, router_id)
-        if all_routers_info['routers'][i]["external_gateway_info"]:
-            ex_port_info = {}
+            if get_router_servers(token_id, tenant_id, all_routers_info['routers'][i]['id']):
+                ex_port_info["is_del"] = "True"
+            else:
+                ex_port_info["is_del"] = "False"
             ex_port_info["srcDeviceId"] = all_routers_info['routers'][i]["external_gateway_info"]["network_id"]
             ex_port_info["fixed_ips"] = all_routers_info['routers'][i]["external_gateway_info"]["external_fixed_ips"]
             ex_port_info["id"] = "gateway"+all_routers_info['routers'][i]["external_gateway_info"]["network_id"]
@@ -103,18 +81,52 @@ def network_subnet(token_id):
             line_info['dstDeviceId'] = network_info['networks'][i]['subnets'][j]
             line_info["stroke"] = "blue"
             line_info["strokeWidth"] = 2
+            line_info["is_del"] = "False"
             line_list.append(line_info)
             line_info = {}
     return line_list
 
 
+def get_network_servers(token_id, tenant_id, network_id):
+    """获取某租户下某网络下的虚拟机"""
+    network_info = get_one_network(token_id, network_id)
+    servers_info = get_tenant_instances(token_id, tenant_id)
+    network_servers_info = []
+    for i in range(len(servers_info['servers'])):
+        if network_info['network']['name'] == servers_info['servers'][i]['addresses'].keys()[0]:
+            network_servers_info.append(servers_info['servers'][i]['id'])
+    return network_servers_info
+
+
+def get_router_networks(token_id, router_id):
+    """获取与路由器相关的网络信息"""
+    router_network_id_info = []
+    router_network = {}
+    ports_info = get_tenant_ports(token_id)
+    for i in range(len(ports_info['ports'])):
+        if ports_info['ports'][i]['device_id'] == router_id:
+            router_network_id_info.append(ports_info['ports'][i]['network_id'])
+    router_network['networks_id'] = router_network_id_info
+    return router_network
+
+
+def get_router_servers(token_id, tenant_id, router_id):
+    """获取路由器和相对应的虚拟机是否有floatingip 有返回True，没返回False"""
+    router_network = get_router_networks(token_id, router_id)
+    for i in range(len(router_network['networks_id'])):
+        network_servers = get_network_servers(token_id, tenant_id, router_network['networks_id'][i])
+        for j in range(len(network_servers)):
+            instance_info = get_tenant_instance(token_id, tenant_id, network_servers[j])
+            # print json.dumps(instance_info)
+            for k in range(len(instance_info['server']['addresses'].values()[0])):
+                if instance_info['server']['addresses'].values()[0][k]['OS-EXT-IPS:type'] == "floating":
+                    return False
+    return True
+
+
 def _get_tuopu_router_info(token_id):
     """ 获取路由器的tuopu信息 """
     routers_list = []
-    x = 240
-    y = 240
-    width = 100
-    height = 100
     all_routers_info = get_tenant_routers(token_id)
     for i in range(len(all_routers_info['routers'])):
         router_info = {}
@@ -127,8 +139,6 @@ def _get_tuopu_router_info(token_id):
         router_info["device_name"] = "router"
         global ROUTER_NUM
         ROUTER_NUM += 1
-        # router_info["x"] = "%s" %(x+i*width)
-        # router_info["y"] = "%s" %(y + i*height)
         router_info["width"] = "%s" %(70)
         router_info["height"] = "%s" %(70)
         routers_list.append(router_info)
@@ -231,7 +241,7 @@ def _get_subnet_detail(network_id, subnet_info):
 def get_network_topology(token_id, tenant_id):
     """这里是获取拓扑信息"""
     tuopu_info = {}
-    tuopu_port = _get_tuopu_port_info_bak(token_id)
+    tuopu_port = _get_tuopu_port_info(token_id, tenant_id)
     tuopu_net_subnet = network_subnet(token_id)
     tuopu_router = _get_tuopu_router_info(token_id)
     network_info = get_all_networks(token_id)
@@ -292,35 +302,3 @@ def get_last_network_topology(token_id, tenant_id):
     return tuopu_info
 
 
-def get_last_network_topology_bak(token_id, tenant_id):
-    global ROUTER_NUM
-    global NET_NUM
-    global EXNET_NUM
-    global SERVER_NUM
-    tuopu_info = get_network_topology(token_id, tenant_id)
-    max_num = max(ROUTER_NUM,NET_NUM,EXNET_NUM, SERVER_NUM)
-    x = 100
-    y = 60
-    width = (max_num+1)*20
-    height = 150
-    router_num = 0
-    server_nmu = 0
-    net_exnet_num = 0
-    for i in range(len(tuopu_info['devices'])):
-        if tuopu_info['devices'][i]['src'].endswith("server.png"):
-            tuopu_info['devices'][i]['x'] = x + server_nmu*width
-            tuopu_info['devices'][i]['y'] = y
-            server_nmu += 1
-        if tuopu_info['devices'][i]['src'].endswith("router.png"):
-            tuopu_info['devices'][i]['x'] = x + router_num*width
-            tuopu_info['devices'][i]['y'] = y + height
-            router_num += 1
-        if tuopu_info['devices'][i]['src'].endswith("network.png") or tuopu_info['devices'][i]['src'].endswith("extnet.png"):
-            tuopu_info['devices'][i]['x'] = x + net_exnet_num*width
-            tuopu_info['devices'][i]['y'] = y + height*2
-            net_exnet_num += 1
-    ROUTER_NUM = 0
-    NET_NUM = 0
-    EXNET_NUM = 0
-    SERVER_NUM = 0
-    return tuopu_info

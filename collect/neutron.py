@@ -25,6 +25,14 @@ def get_all_networks(token_id):
     return r.json()
 
 
+def get_one_network(token_id, network_id):
+    """获得某一网络的信息"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = NEUTRON_ENDPOINT+'/networks/' + network_id
+    r = requests.get(url, headers=headers)
+    return r.json()
+
+
 def get_tenant_subnets(token_id):
     """获取租户的子网"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
@@ -38,6 +46,14 @@ def get_tenant_routers(token_id):
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     url = NEUTRON_ENDPOINT
     r = requests.get(url+'/routers', headers=headers)
+    return r.json()
+
+
+def get_one_router(token_id, router_id):
+    """获取某一路由器的信息"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = NEUTRON_ENDPOINT+'/routers/' + router_id
+    r = requests.get(url, headers=headers)
     return r.json()
 
 
