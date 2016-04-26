@@ -32,6 +32,7 @@ def _get_tuopu_port_info(token_id, tenant_id):
             port_info["stroke"] = "blue"
             port_info["strokeWidth"] = 2
             port_info["is_del"] = "True"
+            port_info["network_id"] = all_port_info['ports'][i]['network_id']
             ports_list.append(port_info)
         if not all_port_info['ports'][i]['device_id'].startswith('dhcp') and all_port_info['ports'][i]['device_owner'].startswith("network:router_interface"):
             """路由器与网络连线"""

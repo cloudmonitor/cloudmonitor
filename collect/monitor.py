@@ -40,3 +40,4 @@ if __name__ == "__main__":
     # print json.dumps(get_router_networks(token_id, "d2092658-6162-49c7-b5a5-94380256e995"))
     # print get_router_servers(token_id, tenant_id, "d2092658-6162-49c7-b5a5-94380256e995")
     print json.dumps(get_last_network_topology(token_id, tenant_id))
+    # print json.dumps(get_tenant_instances(token_id, tenant_id))
