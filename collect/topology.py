@@ -90,7 +90,6 @@ def network_subnet(token_id):
 def get_network_servers(token_id, tenant_id, network_id):
     """获取某租户下某网络下的虚拟机"""
     network_info = get_one_network(token_id, network_id)
-    # print json.dumps(network_info)
     servers_info = get_tenant_instances(token_id, tenant_id)
     network_servers_info = []
     for i in range(len(servers_info['servers'])):
