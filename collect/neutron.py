@@ -261,7 +261,7 @@ def remove_router_interface(token_id, router_id, data):
     for i in range(len(data['router_ports'])):
         subnet_id_info = data['router_ports'][i]
         r = requests.put(url=url, data=json.dumps(subnet_id_info), headers=headers)
-        print r.status_code
+        print r.json()
         delete_status.append(r.status_code)
     return delete_status
 

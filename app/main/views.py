@@ -645,8 +645,8 @@ def add_router_inter(router_id):
 @auth_is_available
 def remove_router_inter(router_id):
     token = json.loads(request.args.get('token'))
-    subnet = request.json
-    dele_status = remove_router_interface(token['id'], router_id, json.dumps(subnet))
+    inter_info = request.json
+    dele_status = remove_router_interface(token['id'], router_id, json.dumps(inter_info))
     return json.dumps(dele_status)
 
 
