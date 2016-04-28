@@ -288,8 +288,8 @@ def get_last_network_topology(token_id, tenant_id):
     y = 60
     server_y = 10
     width = 180
-    height = 150
-    server_height = 70
+    height = 110
+    server_height = 100
     router_num = 0
     server_nmu = 0
     net_exnet_num = 0
