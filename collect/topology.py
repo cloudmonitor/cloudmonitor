@@ -64,11 +64,10 @@ def router_network(token_id, tenant_id):
         if all_port_info['ports'][i]['device_owner'].startswith("network:router_interface"):
             if all_port_info['ports'][i]['network_id'] not in network_router_id_info:
                 network_router_id_info.append((all_port_info['ports'][i]['network_id'], all_port_info['ports'][i]['device_id']))
-                for j in range(len(all_routers_info['routers'])):
-                    if get_router_servers(token_id, tenant_id, all_routers_info['routers'][j]['id']):
-                        port_info["is_del"] = "True"
-                    else:
-                        port_info["is_del"] = "False"
+                if get_router_servers(token_id, tenant_id, all_port_info['ports'][i]['device_id']):
+                    port_info["is_del"] = "False"
+                else:
+                    port_info["is_del"] = "True"
                 port_info["status"] = all_port_info['ports'][i]['status']
                 port_info["srcDeviceId"] = all_port_info['ports'][i]['network_id']
                 port_info["url"] = ""
