@@ -251,4 +251,10 @@ def action_server(token_id, tenant_id, servers_id, data):
     print r.status_code
 
 
-
+def get_server_console(token_id, tenant_id, servers_id, data):
+    """获取虚拟机远程登录"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = NOVA_ENDPOINT.format(tenant_id=tenant_id) + "/servers/" + servers_id + "/action"
+    print url
+    r = requests.post(url=url, data=data, headers=headers)
+    return r.json()

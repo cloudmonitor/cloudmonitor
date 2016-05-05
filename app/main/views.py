@@ -144,6 +144,16 @@ def servers_action_info(servers_id):
     return json.dumps(remove_json)
 
 
+@main.route('/servers_console/<servers_id>', methods=["POST"])
+@auth_is_available
+def servers_console_info(servers_id):
+    token = json.loads(request.args.get('token'))
+    data = request.json
+    print json.dumps(data)
+    console_json = get_server_console(token['id'], token['tenant']['id'], servers_id, json.dumps(data))
+    return json.dumps(console_json)
+
+
 @main.route('/flavors')
 @auth_is_available
 def front_get_tenant_flavors():
