@@ -15,7 +15,7 @@ CANVAS_Y =700
 
 
 def _get_tuopu_port_info(token_id, tenant_id):
-    """获取拓扑的端口信息 srcDeviceId是子网id,dstDeviceId是device_id"""
+    """获取拓扑的端口信息 srcDeviceId是子网id,dstDeviceId是device_id,"""
     ports_list = []
     all_port_info = get_tenant_ports(token_id)
     for i in range(len(all_port_info['ports'])):
@@ -46,7 +46,7 @@ def _get_tuopu_port_info(token_id, tenant_id):
             ex_port_info["fixed_ips"] = all_routers_info['routers'][i]["external_gateway_info"]["external_fixed_ips"]
             ex_port_info["id"] = "gateway"+all_routers_info['routers'][i]["external_gateway_info"]["network_id"]
             ex_port_info["dstDeviceId"] = all_routers_info['routers'][i]["id"]
-            ex_port_info["stroke"] = "black"
+            ex_port_info["stroke"] = "#00CD00"
             ex_port_info["strokeWidth"] = 2
             ports_list.append(ex_port_info)
     return ports_list
@@ -78,7 +78,7 @@ def router_network(token_id, tenant_id):
                 port_info["fixed_ips"] = fixed_ips
                 port_info["id"] = all_port_info['ports'][i]["id"]
                 port_info["dstDeviceId"] = all_port_info['ports'][i]["device_id"]
-                port_info["stroke"] = "black"
+                port_info["stroke"] = "#00CD00"
                 port_info["strokeWidth"] = 2
                 ports_list.append(port_info)
             else:
@@ -92,14 +92,20 @@ def network_subnet(token_id):
     """获取网络与子网的关系图srcDeviceId是网络id,dstDeviceId是subnet_id"""
     line_list = []
     network_info = get_tenant_networks(token_id)
+    port_info = get_tenant_ports(token_id)
     for i in range(len(network_info['networks'])):
         line_info = {}
         for j in range(len(network_info['networks'][i]['subnets'])):
             line_info['srcDeviceId'] = network_info['networks'][i]['id']
             line_info['dstDeviceId'] = network_info['networks'][i]['subnets'][j]
-            line_info["stroke"] = "black"
             line_info["strokeWidth"] = 2
             line_info["is_del"] = "False"
+            for k in range(len(port_info['ports'])):
+                if port_info['ports'][k]['device_owner'].startswith("network:router_interface") and network_info['networks'][i]['subnets'][j] == port_info['ports'][k]['fixed_ips'][0]['subnet_id']:
+                    line_info["stroke"] = "#00CD00"
+                    break
+                else:
+                    line_info["stroke"] = "black"
             line_list.append(line_info)
             line_info = {}
     return line_list
