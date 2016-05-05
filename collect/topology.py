@@ -62,7 +62,7 @@ def router_network(token_id, tenant_id):
         port_info ={}
         fixed_ips = []
         if all_port_info['ports'][i]['device_owner'].startswith("network:router_interface"):
-            if all_port_info['ports'][i]['network_id'] not in network_router_id_info:
+            if (all_port_info['ports'][i]['network_id'], all_port_info['ports'][i]['device_id']) not in network_router_id_info:
                 network_router_id_info.append((all_port_info['ports'][i]['network_id'], all_port_info['ports'][i]['device_id']))
                 if get_router_servers(token_id, tenant_id, all_port_info['ports'][i]['device_id']):
                     port_info["is_del"] = "False"

@@ -17,7 +17,7 @@ from user import *
 if __name__ == "__main__":
 
     # 通过用户和密码获取token
-    token_json = get_user_token("user01", "user01")
+    token_json = get_user_token("user03", "user03")
     admin_json = get_admin_token()
     token = token_json['access']['token']
     token_id = token_json['access']['token']['id']
@@ -27,7 +27,7 @@ if __name__ == "__main__":
     # tenant_name = get_tenants(token_id)['tenants'][0]['name']
     tenant_id = get_tenants(token_id)['tenants'][0]['id']
     # 获取租户的tonken
-    token_json = get_tenant_token("project02", token_id)
+    token_json = get_tenant_token("project03", token_id)
     token_id = token_json['access']['token']['id']
 
     # delete_port_list = get_dis_port(token_id)
