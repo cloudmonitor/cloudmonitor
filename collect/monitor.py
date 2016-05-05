@@ -46,3 +46,5 @@ if __name__ == "__main__":
     # print json.dumps(ports_network(token_id))
     # print json.dumps(router_network(token_id,tenant_id))
     # print json.dumps(get_server_console(token_id, tenant_id, "664a8a84-d9b4-43fe-ba23-31b561e35907", '{"os-getVNCConsole": {"type": "novnc"}}'))
+    # print json.dumps(router_network(token_id, tenant_id))
+    print json.dumps(get_last_network_topology(token_id, tenant_id))

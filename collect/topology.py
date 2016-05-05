@@ -55,16 +55,15 @@ def _get_tuopu_port_info(token_id, tenant_id):
 def router_network(token_id, tenant_id):
     """网络与路由器连线"""
     all_port_info = get_tenant_ports(token_id)
-    network_id_info = []
+    network_router_id_info = []
     ports_list = []
-    fixed_ips = []
-    all_routers_info =get_tenant_routers(token_id)
+    all_routers_info = get_tenant_routers(token_id)
     for i in range(len(all_port_info['ports'])):
         port_info ={}
         fixed_ips = []
         if all_port_info['ports'][i]['device_owner'].startswith("network:router_interface"):
-            if all_port_info['ports'][i]['network_id'] not in network_id_info:
-                network_id_info.append(all_port_info['ports'][i]['network_id'])
+            if all_port_info['ports'][i]['network_id'] not in network_router_id_info:
+                network_router_id_info.append((all_port_info['ports'][i]['network_id'], all_port_info['ports'][i]['device_id']))
                 for j in range(len(all_routers_info['routers'])):
                     if get_router_servers(token_id, tenant_id, all_routers_info['routers'][j]['id']):
                         port_info["is_del"] = "True"
@@ -82,8 +81,8 @@ def router_network(token_id, tenant_id):
                 port_info["strokeWidth"] = 2
                 ports_list.append(port_info)
             else:
-                index = network_id_info.index(all_port_info['ports'][i]['network_id'])
-                network_id_info.insert(index, all_port_info['ports'][i]['network_id'])
+                index = network_router_id_info.index((all_port_info['ports'][i]['network_id'], all_port_info['ports'][i]['device_id']))
+                # network_router_id_info.insert(index, all_port_info['ports'][i]['network_id'])
                 ports_list[index]["fixed_ips"].append(all_port_info['ports'][i]["fixed_ips"][0])
     return ports_list
 
