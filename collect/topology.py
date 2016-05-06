@@ -20,7 +20,7 @@ def _get_tuopu_port_info(token_id, tenant_id):
     all_port_info = get_tenant_ports(token_id)
     for i in range(len(all_port_info['ports'])):
         port_info = {}
-        if not all_port_info['ports'][i]['device_id'].startswith('dhcp') and not all_port_info['ports'][i]['device_owner'].startswith("network:router_interface"):
+        if not all_port_info['ports'][i]['device_id'].startswith('dhcp') and not all_port_info['ports'][i]['device_owner'].startswith("network:router_interface") and  port_info['ports'][i]['device_owner']:
             """子网与虚拟机的连线"""
             port_info["status"] = all_port_info['ports'][i]['status']
             port_info["srcDeviceId"] = all_port_info['ports'][i]['fixed_ips'][0]['subnet_id']

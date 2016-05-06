@@ -510,6 +510,7 @@ def get_firewall_info(firewall_id):
 @auth_is_available
 def get_monitor_network(instance_id, meter_name, type):
     token = json.loads(request.args.get('token'))
+    print meter_name, type
     r = get_meter_func_data(token['id'], instance_id, meter_name, type)
     return json.dumps(r)
 

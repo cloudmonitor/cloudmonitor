@@ -52,6 +52,7 @@ def get_one_meter(token_id, time, meter_name ,resource_id ):
     time_reduce = isostring_to_time(time_to_isostring(time)-60)
     headers = {"X-Auth-Token":token_id, "Accept": "application/json"}
     url = CEILOMETER_ENDPOINT + '/meters/'+meter_name+'/?'
+    # print url
     url_list = [url, ]
     payload = {"q": [{"field": "timestamp", "op": "gt", "value": time_reduce},
                      {"field": "timestamp", "op": "lt", "value": time},
@@ -65,6 +66,7 @@ def get_one_meter(token_id, time, meter_name ,resource_id ):
         else:
             url_list.append(key+'='+str(value)+'&')
     url_list.append("limit=1")
+    # print url_list
     url = ''.join(url_list)
     r = requests.get(url, headers=headers)
     return r.json()
