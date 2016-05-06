@@ -17,7 +17,7 @@ from user import *
 if __name__ == "__main__":
 
     # 通过用户和密码获取token
-    token_json = get_user_token("user03", "user03")
+    token_json = get_user_token("user01", "user01")
     admin_json = get_admin_token()
     token = token_json['access']['token']
     token_id = token_json['access']['token']['id']
@@ -27,7 +27,7 @@ if __name__ == "__main__":
     # tenant_name = get_tenants(token_id)['tenants'][0]['name']
     tenant_id = get_tenants(token_id)['tenants'][0]['id']
     # 获取租户的tonken
-    token_json = get_tenant_token("project03", token_id)
+    token_json = get_tenant_token("project02", token_id)
     token_id = token_json['access']['token']['id']
 
     # delete_port_list = get_dis_port(token_id)
@@ -49,4 +49,4 @@ if __name__ == "__main__":
     # print json.dumps(router_network(token_id, tenant_id))
     # print json.dumps(get_last_network_topology(token_id, tenant_id))
     # print json.dumps(get_meter_func_data(token_id, "d88d4933-f0b4-48b9-bccf-2e458c430170", "cpu_util", "day"))
-    print json.dumps(get_meter_func_data(token_id, "d88d4933-f0b4-48b9-bccf-2e458c430170", "memory.usage", "minute"))
+    print json.dumps(get_meter_func_data(token_id, "f84d2a28-2bef-4075-94c3-de8ec36e52a4", "memory.usage", "minute"))
