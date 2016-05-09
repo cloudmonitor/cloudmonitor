@@ -1,6 +1,7 @@
 # _*_ coding:utf-8 _*_
 
 from settings import *
+from images import get_tenant_images
 
 
 def get_tenant_instances(token_id, tenant_id):
@@ -8,7 +9,15 @@ def get_tenant_instances(token_id, tenant_id):
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     url = NOVA_ENDPOINT.format(tenant_id=tenant_id)
     r = requests.get(url+'/servers/detail', headers=headers)
-    return r.json()
+    instances_info = r.json()
+    images_info = get_tenant_images(token_id)
+    for i in range(len(instances_info['servers'])):
+        image_id = instances_info['servers'][i]['image']['id']
+        for j in range(len(images_info['images'])):
+            if image_id == images_info['images'][j]['id']:
+                instances_info['servers'][i]['image']['image_name'] = images_info['images'][j]['name']
+                break
+    return instances_info
 
 
 def get_tenant_instance(token_id, tenant_id, instance_id):

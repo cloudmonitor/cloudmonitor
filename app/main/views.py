@@ -226,12 +226,12 @@ def front_get_tenant_subnets():
     return json.dumps(subnets_json)
 
 
-@main.route('/new_subnets')
-@auth_is_available
-def front_get_tenant_new_subnets():
-    token = json.loads(request.args.get('token'))
-    subnets_json = get_new_subnets(token['id'])
-    return json.dumps(subnets_json)
+# @main.route('/new_subnets')
+# @auth_is_available
+# def front_get_tenant_new_subnets():
+#     token = json.loads(request.args.get('token'))
+#     subnets_json = get_new_subnets(token['id'])
+#     return json.dumps(subnets_json)
 
 
 @main.route('/ports')

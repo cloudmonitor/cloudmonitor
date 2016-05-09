@@ -65,19 +65,19 @@ def get_tenant_ports(token_id):
     return r.json()
 
 
-def get_new_subnets(token_id):
-    """获取有ip地址池的子网"""
-    subnet_info = []
-    subnet = {}
-    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
-    url = NEUTRON_ENDPOINT
-    r = requests.get(url+'/subnets', headers=headers)
-    subnet_test = r.json()
-    for i in range(len(subnet_test['subnets'])):
-        if subnet_test['subnets'][i]['allocation_pools']:
-            subnet_info.append(subnet_test['subnets'][i])
-    subnet['subnets'] = subnet_info
-    return subnet
+# def get_new_subnets(token_id):
+#     """获取有ip地址池的子网"""
+#     subnet_info = []
+#     subnet = {}
+#     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+#     url = NEUTRON_ENDPOINT
+#     r = requests.get(url+'/subnets', headers=headers)
+#     subnet_test = r.json()
+#     for i in range(len(subnet_test['subnets'])):
+#         if subnet_test['subnets'][i]['allocation_pools']:
+#             subnet_info.append(subnet_test['subnets'][i])
+#     subnet['subnets'] = subnet_info
+#     return subnet
 
 
 def get_router_ports(token_id, router_id):
