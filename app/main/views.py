@@ -49,7 +49,7 @@ def front_get_tenant_limits():
 @auth_is_available
 def front_get_tenant_instances():
     token = json.loads(request.args.get('token'))
-    vms_json = get_tenant_instances(token['id'], token['tenant']['id'])
+    vms_json = get_tenant_instances_image(token['id'], token['tenant']['id'])
     return json.dumps(vms_json)
 
 
@@ -239,6 +239,14 @@ def front_get_tenant_subnets():
 def front_get_tenant_ports():
     token = json.loads(request.args.get('token'))
     ports_json = get_tenant_ports(token['id'])
+    return json.dumps(ports_json)
+
+
+@main.route('/server_ports')
+@auth_is_available
+def front_get_tenant_server_ports():
+    token = json.loads(request.args.get('token'))
+    ports_json = get_server_port(token['id'], token["tenant"]["id"])
     return json.dumps(ports_json)
 
 

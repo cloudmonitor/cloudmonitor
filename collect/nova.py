@@ -4,8 +4,8 @@ from settings import *
 from images import get_tenant_images
 
 
-def get_tenant_instances(token_id, tenant_id):
-    """获取某一租户下的所有vm"""
+def get_tenant_instances_image(token_id, tenant_id):
+    """获取某一租户下的所有vm,并将镜像的名字加入到了虚拟机的内容中"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     url = NOVA_ENDPOINT.format(tenant_id=tenant_id)
     r = requests.get(url+'/servers/detail', headers=headers)
@@ -18,6 +18,14 @@ def get_tenant_instances(token_id, tenant_id):
                 instances_info['servers'][i]['image']['image_name'] = images_info['images'][j]['name']
                 break
     return instances_info
+
+
+def get_tenant_instances(token_id, tenant_id):
+    """获取某一租户下所有的VM"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = NOVA_ENDPOINT.format(tenant_id=tenant_id)
+    r = requests.get(url+'/servers/detail', headers=headers)
+    return r.json()
 
 
 def get_tenant_instance(token_id, tenant_id, instance_id):

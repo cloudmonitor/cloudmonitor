@@ -309,8 +309,30 @@ def get_subnet_servers(token_id, tenant_id, subnet_id):
     return subnet_vm_list
 
 
-
-
+def get_server_port(token_id, tenant_id):
+    """获取虚拟机的端口信息"""
+    ports_info_list = []
+    port_infos = {}
+    from nova import get_tenant_instances
+    ports_info = get_tenant_ports(token_id)
+    servers_info = get_tenant_instances(token_id, tenant_id)
+    subnet_info = get_tenant_subnets(token_id)
+    for i in range(len(ports_info['ports'])):
+        if ports_info['ports'][i]['device_owner'].startswith('compute'):
+            for j in range(len(subnet_info['subnets'])):
+                if ports_info['ports'][i]['fixed_ips'][0]['subnet_id'] == subnet_info['subnets'][j]['id']:
+                    ports_info['ports'][i]['fixed_ips'][0]['subnet_name'] = subnet_info['subnets'][j]['name']
+            for k in range(len(servers_info['servers'])):
+                if ports_info['ports'][i]['device_id'] == servers_info['servers'][k]['id']:
+                    ports_info['ports'][i]['device_name'] = servers_info['servers'][k]['name']
+                    servers_address = servers_info['servers'][k]['addresses'].values()
+                    print servers_address
+                    for s in range(len(servers_address[0])):
+                        if servers_address[0][s]['OS-EXT-IPS:type'] == 'floating':
+                            ports_info['ports'][i]['floating_ip'] = servers_address[0][s]['addr']
+            ports_info_list.append(ports_info['ports'][i])
+    port_infos['ports'] = ports_info_list
+    return port_infos
 
 
 
