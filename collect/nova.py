@@ -120,7 +120,7 @@ def touch_interface(token_id, tenant_id, data, servers_id):
     return r.json()
 
 
-def Detach_interface(token_id, tenant_id, servers_id, port_id):
+def detach_interface(token_id, tenant_id, servers_id, port_id):
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     url =  NOVA_ENDPOINT.format(tenant_id=tenant_id) + "/servers/" + servers_id + "/os-interface/"+ port_id
     r = requests.delete(url = url,headers = headers)

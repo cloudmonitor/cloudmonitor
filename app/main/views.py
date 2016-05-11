@@ -100,7 +100,7 @@ def bind_interfaces_info(servers_id):
     return json.dumps(bind_port_json)
 
 
-@main.route('/interface_bind/<servers_id>', methods=["POST"])
+@main.route('/touch_interface/<servers_id>', methods=["POST"])
 @auth_is_available
 def bind_interface2_info(servers_id):
     token = json.loads(request.args.get('token'))
@@ -109,11 +109,11 @@ def bind_interface2_info(servers_id):
     return json.dumps(bind_port_json)
 
 
-@main.route('/interface_delete/<servers_id>/<port_id>')
+@main.route('/detach_interface/<servers_id>/<port_id>')
 @auth_is_available
-def delete_interfaces_info(servers_id,port_id):
+def detach_interface_info(servers_id,port_id):
     token = json.loads(request.args.get('token'))
-    del_port = Detach_interface(token['id'], token['tenant']['id'], servers_id, port_id)
+    del_port = detach_interface(token['id'], token['tenant']['id'], servers_id, port_id)
     return json.dumps(del_port)
 
 
