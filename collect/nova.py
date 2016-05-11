@@ -97,7 +97,7 @@ def delete_servers(token_id, tenant_id, servers_id_list):
 
 
 def bind_interface(token_id, tenant_id, data, servers_id):
-    """绑定虚拟网卡"""
+    """创建网卡在绑定到虚拟机"""
     from neutron import create_port
     print data
     network_id = data['interface']["network_id"]
@@ -106,14 +106,28 @@ def bind_interface(token_id, tenant_id, data, servers_id):
     port_r = create_port(token_id, port_data)
     port_id = port_r['port']['id']
     data = '{"interfaceAttachment": {"port_id": "%s"}}' %(port_id)
-    print data
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     url = NOVA_ENDPOINT.format(tenant_id=tenant_id) + "/servers/" + servers_id + "/os-interface"
     r = requests.post(url=url, data=data, headers=headers)
     return r.json()
 
 
-def delete_interface(token_id, tenant_id, servers_id, inter_data):
+def touch_interface(token_id, tenant_id, data, servers_id):
+    """已经存在网卡绑定到虚拟机"""
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url = NOVA_ENDPOINT.format(tenant_id=tenant_id) + "/servers/" + servers_id + "/os-interface"
+    r = requests.post(url=url,data=json.dumps(data), headers=headers)
+    return r.json()
+
+
+def Detach_interface(token_id, tenant_id, servers_id, port_id):
+    headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
+    url =  NOVA_ENDPOINT.format(tenant_id=tenant_id) + "/servers/" + servers_id + "/os-interface/"+ port_id
+    r = requests.delete(url = url,headers = headers)
+    return r.status_code
+
+
+def delete_interface(token_id, tenant_id, servers_id,port_id):
     """解绑虚拟网卡"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     ip_address = inter_data['ip_address']
