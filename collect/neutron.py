@@ -318,7 +318,7 @@ def get_server_port(token_id, tenant_id):
     servers_info = get_tenant_instances(token_id, tenant_id)
     subnet_info = get_tenant_subnets(token_id)
     for i in range(len(ports_info['ports'])):
-        if ports_info['ports'][i]['device_owner'].startswith('compute'):
+        if ports_info['ports'][i]['device_owner'].startswith('compute') or not ports_info['ports'][i]['device_owner']:
             for j in range(len(subnet_info['subnets'])):
                 if ports_info['ports'][i]['fixed_ips'][0]['subnet_id'] == subnet_info['subnets'][j]['id']:
                     ports_info['ports'][i]['fixed_ips'][0]['subnet_name'] = subnet_info['subnets'][j]['name']
@@ -326,7 +326,6 @@ def get_server_port(token_id, tenant_id):
                 if ports_info['ports'][i]['device_id'] == servers_info['servers'][k]['id']:
                     ports_info['ports'][i]['device_name'] = servers_info['servers'][k]['name']
                     servers_address = servers_info['servers'][k]['addresses'].values()
-                    print servers_address
                     for s in range(len(servers_address[0])):
                         if servers_address[0][s]['OS-EXT-IPS:type'] == 'floating':
                             ports_info['ports'][i]['floating_ip'] = servers_address[0][s]['addr']
