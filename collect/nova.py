@@ -121,10 +121,21 @@ def touch_interface(token_id, tenant_id, data, servers_id):
 
 
 def detach_interface(token_id, tenant_id, servers_id, port_id):
+    """解绑虚拟机上的接口"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
-    url =  NOVA_ENDPOINT.format(tenant_id=tenant_id) + "/servers/" + servers_id + "/os-interface/"+ port_id
-    r = requests.delete(url = url,headers = headers)
+    url = NOVA_ENDPOINT.format(tenant_id=tenant_id) + "/servers/" + servers_id + "/os-interface/"+ port_id
+    r = requests.delete(url=url, headers=headers)
     return r.status_code
+
+
+def detach_interface_list(token_id, tenant_id, servers_id, data):
+    result_list_info = []
+    result_list = {}
+    for i in range(len(data['ports_id'])):
+        port_id = data['ports_id'][i]
+        result_list_info.append(detach_interface(token_id, tenant_id, servers_id, port_id))
+    result_list['del_status'] = result_list_info
+    return result_list
 
 
 def delete_interface(token_id, tenant_id, servers_id,port_id):

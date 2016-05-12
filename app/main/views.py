@@ -109,11 +109,12 @@ def bind_interface2_info(servers_id):
     return json.dumps(bind_port_json)
 
 
-@main.route('/detach_interface/<servers_id>/<port_id>')
+@main.route('/detach_interface/<servers_id>', methods=["POST"])
 @auth_is_available
-def detach_interface_info(servers_id,port_id):
+def detach_interface_info(servers_id):
     token = json.loads(request.args.get('token'))
-    del_port = detach_interface(token['id'], token['tenant']['id'], servers_id, port_id)
+    data = request.json
+    del_port = detach_interface_list(token['id'], token['tenant']['id'], servers_id, data)
     return json.dumps(del_port)
 
 
