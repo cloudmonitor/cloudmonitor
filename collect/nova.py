@@ -138,7 +138,7 @@ def detach_interface_list(token_id, tenant_id, servers_id, data):
     return result_list
 
 
-def delete_interface(token_id, tenant_id, servers_id,port_id):
+def delete_interface(token_id, tenant_id, servers_id,inter_data):
     """解绑虚拟网卡"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     ip_address = inter_data['ip_address']
