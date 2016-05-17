@@ -51,4 +51,5 @@ if __name__ == "__main__":
     # print json.dumps(get_meter_func_data(token_id, "d88d4933-f0b4-48b9-bccf-2e458c430170", "cpu_util", "day"))
     # print json.dumps(get_meter_func_data(token_id, "f84d2a28-2bef-4075-94c3-de8ec36e52a4", "memory.usage", "minute"))
     # print json.dumps(get_tenant_instances(token_id, tenant_id))
-    print json.dumps(get_server_port(token_id, tenant_id))
+    # print json.dumps(get_server_port(token_id, tenant_id))
+    print delete_subnet(token_id, '{"subnet_ids":["d8f2be93-d772-491d-9827-d30bf20cc2d2"]}')

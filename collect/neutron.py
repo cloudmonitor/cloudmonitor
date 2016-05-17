@@ -156,12 +156,16 @@ def update_subnet(token_id, data, subnet_id):
 def delete_subnet(token_id, subnet_id_list):
     """删除子网"""
     delete_status = {}
+    subnet_id_list = json.loads(subnet_id_list)
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     for i in range(len(subnet_id_list["subnet_ids"])):
         url = NEUTRON_ENDPOINT + '/subnets/' + subnet_id_list["subnet_ids"][i]
         print url
         r = requests.delete(url=url, headers=headers)
-        delete_status[subnet_id_list["subnet_ids"][i]] = r.status_code
+        if r.status_code == 204:
+            delete_status[subnet_id_list["subnet_ids"][i]] = r.status_code
+        else:
+            delete_status[subnet_id_list["subnet_ids"][i]] = r.json()
     return delete_status
 
 
