@@ -4,7 +4,7 @@ from flask import request
 import json
 
 from . import main
-from collect.monitor import *
+from osapi import *
 
 
 @main.route('/login', methods=['POST'])
