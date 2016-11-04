@@ -33,7 +33,8 @@ def get_instance_resource_id(token_id, instance_id, meter_name):
     for resource in r.json():
         if meter_name.startswith("network."):
             if 'vnic_name' in resource['metadata']:
-                if resource['resource_id'].find(instance_id) != -1:
+                regex = instance_id + '-' + resource['metadata']['vnic_name']
+                if resource['resource_id'].endswith(regex):
                     return resource['resource_id']
         else:
             if resource['resource_id'] == instance_id:
