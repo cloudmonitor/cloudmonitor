@@ -8,10 +8,12 @@ from ceilometer import *
 from firewall import *
 from settings import *
 from securitygroup import *
+from floatingip import *
 from quota import *
 from keypair import *
 from util import *
 from user import *
+from images import *
 
 
 if __name__ == "__main__":

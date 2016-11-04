@@ -5,11 +5,6 @@ import json
 
 from . import main
 from collect.monitor import *
-from collect.firewall import *
-from collect.floatingip import *
-from collect.images import *
-from collect.user import *
-from collect.util import *
 
 
 @main.route('/login', methods=['POST'])

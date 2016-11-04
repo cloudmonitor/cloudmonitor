@@ -64,7 +64,6 @@ def get_server_interface(token_id, tenant_id, servers_id):
     """获取某一虚拟机的interface信息"""
     headers = {"Content-type": "application/json", "X-Auth-Token": token_id, "Accept": "application/json"}
     url = NOVA_ENDPOINT.format(tenant_id=tenant_id) + "/servers/" + servers_id + "/os-interface"
-    print url
     r = requests.get(url=url, headers=headers)
     return r.json()
 

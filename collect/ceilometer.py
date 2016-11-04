@@ -23,8 +23,7 @@ def isostring_to_time(s):
 
 def get_meter_func_data(token_id, instance_id, meter_name, type):
     resource_id = get_instance_resource_id(token_id, instance_id, meter_name)
-    func_name = "get_list_meter_"+type
-    # print func_name
+    func_name = "get_list_meter_" + type
     return eval(func_name)(token_id, meter_name, resource_id)
 
 
@@ -33,9 +32,8 @@ def get_instance_resource_id(token_id, instance_id, meter_name):
     r = requests.get(CEILOMETER_ENDPOINT+'/resources', headers=headers)
     for resource in r.json():
         if meter_name.startswith("network."):
-            if resource['metadata'].has_key('vnic_name'):
-                regex = instance_id + '-' + resource['metadata']['vnic_name']
-                if resource['resource_id'].endswith(regex):
+            if 'vnic_name' in resource['metadata']:
+                if resource['resource_id'].find(instance_id) != -1:
                     return resource['resource_id']
         else:
             if resource['resource_id'] == instance_id:
@@ -47,16 +45,16 @@ def localtime_to_utc(s):
     return isostring_to_time(seconds)
 
 
-def get_one_meter(token_id, time, meter_name ,resource_id ):
+def get_one_meter(token_id, local_time, meter_name, resource_id):
     """根据时间来删选数据"""
-    time_reduce = isostring_to_time(time_to_isostring(time)-60)
+    time_reduce = isostring_to_time(time_to_isostring(local_time)-60)
     headers = {"X-Auth-Token":token_id, "Accept": "application/json"}
     url = CEILOMETER_ENDPOINT + '/meters/'+meter_name+'/?'
     # print url
     url_list = [url, ]
     payload = {"q": [{"field": "timestamp", "op": "gt", "value": time_reduce},
-                     {"field": "timestamp", "op": "lt", "value": time},
-                     {"field": "resource_id","value": resource_id}
+                     {"field": "timestamp", "op": "lt", "value": local_time},
+                     {"field": "resource_id", "value": resource_id}
                     ]}
     for key, value in payload.items():
         if isinstance(value, list):
