@@ -738,7 +738,7 @@ def delete_user_info(user_id):
 def get_detail_user_info(user_id):
     token = json.loads(request.args.get('token'))
     detail_json = get_users_detail(token, user_id)
-    return detail_json
+    return json.dumps(detail_json)
 
 
 @main.route('/tenant_used_quota')
@@ -746,4 +746,4 @@ def get_detail_user_info(user_id):
 def get_tenant_used_quota_info():
     token = json.loads(request.args.get('token'))
     tenant_used_json = get_tenant_used_info(token['id'], token["tenant"]["id"])
-    return tenant_used_json
+    return json.dumps(tenant_used_json)
