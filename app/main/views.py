@@ -526,11 +526,12 @@ def get_firewall_info(firewall_id):
     return json.dumps(firewall_info_json)
 
 
-@main.route('/monitor/<instance_id>/<meter_name>/<type>')
+@main.route('/monitor/<instance_id>/<meter_name>/<curr_type>')
 @auth_is_available
-def get_monitor_network(instance_id, meter_name, type):
+def get_monitor_data(instance_id, meter_name, curr_type):
     token = json.loads(request.args.get('token'))
-    r = get_meter_func_data(token['id'], instance_id, meter_name, type)
+    limit = int(request.args.get('limit'))
+    r = get_meter_func_data(token['id'], instance_id, meter_name, curr_type, limit)
     return json.dumps(r)
 
 
