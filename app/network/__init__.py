@@ -4,4 +4,4 @@ from flask import Blueprint
 
 from . import views
 
-main = Blueprint('main', __name__)
+network = Blueprint('network', __name__)

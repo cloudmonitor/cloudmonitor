@@ -4,4 +4,4 @@ from flask import Blueprint
 
 from . import views
 
-main = Blueprint('main', __name__)
+monitor = Blueprint('monitor', __name__)

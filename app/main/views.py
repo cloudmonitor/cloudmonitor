@@ -1,8 +1,5 @@
 # _*_ coding:utf-8 _*_
 
-from flask import request
-import json
-
 from . import main
 from osapi import *
 
