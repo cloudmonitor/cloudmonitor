@@ -2,6 +2,6 @@
 
 from flask import Blueprint
 
-from . import views
-
 monitor = Blueprint('monitor', __name__)
+
+from . import views
