@@ -11,8 +11,9 @@ from osapi.sdnapi import StaticFlowPusher, Controller, BASE_URL
 @sdn.route('/get_flow_entries')
 @auth_is_available
 def get_flow_entries():
+    token = json.loads(request.args.get('token'))
     staticflowpusher = StaticFlowPusher(BASE_URL)
-    flow_entries = staticflowpusher.get_flow("all")
+    flow_entries = staticflowpusher.get_flow(token['tenant']['id'])
     return json.dumps(flow_entries)
 
 
@@ -52,7 +53,7 @@ def add_flow_entry():
     flow_entry["active"] = "true"
     # 向虚拟机对应的OVS添加flow_entry
     staticflowpusher = StaticFlowPusher(BASE_URL)
-    add_success = staticflowpusher.add_flow(json.dumps(flow_entry))
+    add_success = staticflowpusher.add_flow(json.dumps(flow_entry), token['tenant']['id'], flow_entry["instance_id"])
     if add_success:
         return json.dumps("success")
     else:
@@ -62,9 +63,10 @@ def add_flow_entry():
 @sdn.route('/delete_flow_entry', methods=["DELETE"])
 @auth_is_available
 def delete_flow_entry():
-    flow_name = request.json
+    flow_enty = request.json
+    token = json.loads(request.args.get('token'))
     staticflowpusher = StaticFlowPusher(BASE_URL)
-    del_success = staticflowpusher.delete_flow(json.dumps(flow_name))
+    del_success = staticflowpusher.delete_flow(json.dumps(flow_enty), token['tenant']['id'])
     if del_success:
         return json.dumps("success")
     else:
