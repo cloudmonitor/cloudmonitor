@@ -28,5 +28,8 @@ def create_app():
     from .monitor import monitor as monitor_blueprint
     app.register_blueprint(monitor_blueprint, url_prefix="/v1.0/monitor")
 
+    from .sdn import sdn as sdn_blueprint
+    app.register_blueprint(sdn_blueprint, url_prefix="/v1.0/sdn")
 
     return app
+

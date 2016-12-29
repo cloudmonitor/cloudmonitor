@@ -58,7 +58,7 @@ def front_get_instance_interfaces(servers_id):
 def create_servers_info():
     token = json.loads(request.args.get('token'))
     servers_data = request.json
-    print json.dumps(servers_data)
+    # print json.dumps(servers_data)
     servers_json = create3_servers(token['id'], token['tenant']['id'], json.dumps(servers_data))
     return json.dumps(servers_json)
 
