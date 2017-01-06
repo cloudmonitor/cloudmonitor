@@ -17,17 +17,18 @@ def get_flow_entries():
     return json.dumps(flow_entries)
 
 
-@sdn.route('/add_flow_entry', methods=["POST"])
+@sdn.route('/add_flow_entry/<instance_id>', methods=["POST"])
 @auth_is_available
-def add_flow_entry():
+def add_flow_entry(instance_id):
     flow_entry = request.json
     token = json.loads(request.args.get('token'))
-    # 获取虚拟信息（包括端口信息以及对应物理主机IP）
-    server_json = get_tenant_instance_host_ip(token['id'], token['tenant']['id'], flow_entry["instance_id"])
+    # 获取虚拟机信息（包括端口信息以及对应物理主机IP）
+    server_json = get_tenant_instance_host_ip(token['id'], token['tenant']['id'], instance_id)
     # 虚拟机对应OVS网卡名称
     ifname = "qvo" + server_json["server"]["interfaceAttachments"][0]["port_id"][0:11]
     # 虚拟机对应物理主机IP
     host_ip = server_json["server"]["hostIP"]
+    instance_name = server_json["server"]["name"]
     # 通过sFlow-RT获取对应物理主机上的br-int的Metric信息
     metric_json = requests.get("http://192.168.1.180:8008/metric/"+host_ip+"/json").json()
     # 虚拟机对应在OVS上的ifindex
@@ -53,14 +54,14 @@ def add_flow_entry():
     flow_entry["active"] = "true"
     # 向虚拟机对应的OVS添加flow_entry
     staticflowpusher = StaticFlowPusher(BASE_URL)
-    add_success = staticflowpusher.add_flow(json.dumps(flow_entry), token['tenant']['id'], flow_entry["instance_id"])
+    add_success = staticflowpusher.add_flow(json.dumps(flow_entry), token['tenant']['id'], instance_id, instance_name)
     if add_success:
         return json.dumps("success")
     else:
         return json.dumps("fail")
 
 
-@sdn.route('/delete_flow_entry', methods=["DELETE"])
+@sdn.route('/delete_flow_entry', methods=["POST"])
 @auth_is_available
 def delete_flow_entry():
     flow_enty = request.json
