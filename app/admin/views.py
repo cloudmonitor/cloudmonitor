@@ -4,6 +4,7 @@ from flask import request
 import json
 
 from osapi import auth_is_available, get_admin_token
+from osapi.admin import *
 
 from . import admin
 
