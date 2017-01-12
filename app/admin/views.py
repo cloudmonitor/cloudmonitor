@@ -1,6 +1,6 @@
 # _*_ coding:utf-8 _*_
 
-from Flask import request
+from flask import request
 import json
 
 from osapi import auth_is_available, get_admin_token
