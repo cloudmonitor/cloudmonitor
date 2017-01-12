@@ -4,6 +4,11 @@ from . import main
 from osapi import *
 
 
+@main.route('/')
+def root():
+    return "hello world!"
+
+
 @main.route('/login', methods=['POST'])
 def login():
     username = request.json.get('username')
