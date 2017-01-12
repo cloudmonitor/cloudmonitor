@@ -31,5 +31,8 @@ def create_app():
     from .sdn import sdn as sdn_blueprint
     app.register_blueprint(sdn_blueprint, url_prefix="/v1.0/sdn")
 
+    from .admin import admin as admin_blueprint
+    app.register_blueprint(admin_blueprint, url_prefix="/v1.0/admin")
+
     return app
 
