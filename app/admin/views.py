@@ -16,6 +16,22 @@ def login():
     return json.dumps(token_json)
 
 
+@admin.route('/abstract/<token_id>/<tenant_id>/<start_time>/<stop_time>')
+@auth_is_available
+def abstract(token_id, start_time, stop_time, tenant_id):
+    """获取概要信息"""
+    abstract_info = get_tenant_usage(token_id, start_time, stop_time, tenant_id)
+    return json.dumps(abstract_info)
+
+
+@admin.route('/hypervisor/<token_id>/<tenant_id>')
+@auth_is_available
+def hypervisor(token_id, tenant_id):
+    """获取物理主机的信息"""
+    hypervisor_info = get_physical_usage(token_id, tenant_id)
+    return json.dumps(hypervisor_info)
+
+
 @admin.route('/tenants')
 @auth_is_available
 def get_all_tenants_data():
@@ -92,4 +108,5 @@ def update_user_data(user_id):
     user_json = request.json
     new_user_json = update_user(token["id"], user_id, json.dumps(user_json))
     return json.dumps(new_user_json)
+
 
