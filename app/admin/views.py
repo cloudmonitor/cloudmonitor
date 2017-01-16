@@ -20,7 +20,7 @@ def login():
 @admin.route('/abstract/<token_id>/<tenant_id>/<start_time>/<stop_time>')
 def abstract(token_id , start_time, stop_time, tenant_id):
     """获取概要信息"""
-    abstract_info = get_tenant_usage(token_id, start_time, stop_time, tenant_id)
+    abstract_info = get_abstarct_info(token_id, start_time, stop_time, tenant_id)
     return json.dumps(abstract_info)
 
 
