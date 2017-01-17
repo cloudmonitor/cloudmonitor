@@ -153,7 +153,7 @@ def bind_security_group_info(server_id):
 def servers_action_info(servers_id):
     token = json.loads(request.args.get('token'))
     data = request.json
-    print json.dumps(data)
+    # print json.dumps(data)
     remove_json = action_server(token['id'], token['tenant']['id'], servers_id, json.dumps(data))
     return json.dumps(remove_json)
 
@@ -163,7 +163,7 @@ def servers_action_info(servers_id):
 def servers_console_info(servers_id):
     token = json.loads(request.args.get('token'))
     data = request.json
-    print json.dumps(data)
+    # print json.dumps(data)
     console_json = get_server_console(token['id'], token['tenant']['id'], servers_id, json.dumps(data))
     return json.dumps(console_json)
 
@@ -723,7 +723,7 @@ def create_user_info():
 def update_user_info(user_id):
     token = json.loads(request.args.get('token'))
     data = request.json
-    print json.dumps(data)
+    # print json.dumps(data)
     user_json = update_user(token, user_id, data)
     return json.dumps(user_json)
 
