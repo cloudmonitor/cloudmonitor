@@ -38,7 +38,7 @@ def hypervisor():
 
 @admin.route('/all_instances')
 @auth_is_available
-def get_all_instances_data(tenant_id):
+def get_all_instances_data():
     """获取物理主机的信息"""
     token = json.loads(request.args.get('token'))
     instances_info = get_all_tenant_instances(token["id"], token["tenant"]["id"])
