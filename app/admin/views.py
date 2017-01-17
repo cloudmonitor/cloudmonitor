@@ -16,32 +16,32 @@ def login():
     return json.dumps(token_json)
 
 
-@admin.route('/abstract/<tenant_id>')
+@admin.route('/abstract')
 @auth_is_available
-def abstract(tenant_id):
+def abstract():
     """获取概要信息"""
     token = json.loads(request.args.get('token'))
     start_time = request.args.get('start_time')
     end_time = request.args.get('end_time')
-    abstract_info = get_tenant_usage(token["id"], start_time, end_time, tenant_id)
+    abstract_info = get_tenant_usage(token["id"], start_time, end_time, token["tenant"]["id"])
     return json.dumps(abstract_info)
 
 
-@admin.route('/hypervisor/<tenant_id>')
+@admin.route('/hypervisor')
 @auth_is_available
-def hypervisor(tenant_id):
+def hypervisor():
     """获取物理主机的信息"""
     token = json.loads(request.args.get('token'))
-    hypervisor_info = get_physical_usage(token["id"], tenant_id)
+    hypervisor_info = get_physical_usage(token["id"], token["tenant"]["id"])
     return json.dumps(hypervisor_info)
 
 
-@admin.route('/all_instances/<tenant_id>')
+@admin.route('/all_instances')
 @auth_is_available
 def get_all_instances_data(tenant_id):
     """获取物理主机的信息"""
     token = json.loads(request.args.get('token'))
-    instances_info = get_all_tenant_instances(token["id"], tenant_id)
+    instances_info = get_all_tenant_instances(token["id"], token["tenant"]["id"])
     return json.dumps(instances_info)
 
 
@@ -83,9 +83,8 @@ def update_tenant_data(tenant_id):
 @auth_is_available
 def update_tenant_quota_data(tenant_id):
     token = json.loads(request.args.get('token'))
-    admin_tenant_id = request.args.get('admin_tenant_id')
     quota_json = request.json
-    new_quota_json = update_tenant_quota(token["id"], admin_tenant_id, tenant_id, json.dumps(quota_json))
+    new_quota_json = update_tenant_quota(token["id"], token["tenant"]["id"], tenant_id, json.dumps(quota_json))
     return json.dumps(new_quota_json)
 
 
