@@ -46,7 +46,7 @@ def front_get_tenant_limits():
 @auth_is_available
 def front_get_tenant_instances():
     token = json.loads(request.args.get('token'))
-    vms_json = get_tenant_instances_image(token['id'], token['tenant']['id'])
+    vms_json = get_tenant_instances_image_flavor(token['id'], token['tenant']['id'])
     return json.dumps(vms_json)
 
 
