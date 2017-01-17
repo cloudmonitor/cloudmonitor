@@ -16,20 +16,33 @@ def login():
     return json.dumps(token_json)
 
 
-@admin.route('/abstract/<token_id>/<tenant_id>/<start_time>/<stop_time>')
+@admin.route('/abstract/<tenant_id>')
 @auth_is_available
-def abstract(token_id, start_time, stop_time, tenant_id):
+def abstract(tenant_id):
     """获取概要信息"""
-    abstract_info = get_tenant_usage(token_id, start_time, stop_time, tenant_id)
+    token = json.loads(request.args.get('token'))
+    start_time = request.args.get('start_time')
+    end_time = request.args.get('end_time')
+    abstract_info = get_tenant_usage(token["id"], start_time, end_time, tenant_id)
     return json.dumps(abstract_info)
 
 
-@admin.route('/hypervisor/<token_id>/<tenant_id>')
+@admin.route('/hypervisor/<tenant_id>')
 @auth_is_available
-def hypervisor(token_id, tenant_id):
+def hypervisor(tenant_id):
     """获取物理主机的信息"""
-    hypervisor_info = get_physical_usage(token_id, tenant_id)
+    token = json.loads(request.args.get('token'))
+    hypervisor_info = get_physical_usage(token["id"], tenant_id)
     return json.dumps(hypervisor_info)
+
+
+@admin.route('/all_instances/<tenant_id>')
+@auth_is_available
+def get_all_instances_data(tenant_id):
+    """获取物理主机的信息"""
+    token = json.loads(request.args.get('token'))
+    instances_info = get_all_tenant_instances(token["id"], tenant_id)
+    return json.dumps(instances_info)
 
 
 @admin.route('/tenants')
