@@ -138,3 +138,39 @@ def get_instance_usage_abstract():
     token = json.loads(request.args.get('token'))
     instances_info = get_all_tenant_instances(token["id"], token["tenant"]["id"])
     return json.dumps(instances_info)
+
+
+@admin.route('/tenant/usage_abstract/<project_id>')
+@auth_is_available
+def get_tenant_usage_abstract(project_id):
+    """获取租户的资源使用摘要"""
+    token = json.loads(request.args.get('token'))
+    tenant_usage_info = get_tenant_usage_abstart(token["id"], token["tenant"]["id"], project_id)
+    return json.dumps(tenant_usage_info)
+
+
+@admin.route('/tenant/instances/<project_id>')
+@auth_is_available
+def get_tenant_instances(project_id):
+    """获取租户下虚拟机的基本情况"""
+    token = json.loads(request.args.get('token'))
+    tenant_instanes_info = get_tenant_instances(token["id"], token["tenant"]["id"], project_id)
+    return json.dumps(tenant_instanes_info)
+
+
+@admin.route('/tenant/networks/<project_id>')
+@auth_is_available
+def get_tenant_networks(project_id):
+    """获取租户下网络基本情况"""
+    token = json.loads(request.args.get('token'))
+    tenant_networks_info = get_tenant_networks(token["id"], project_id)
+    return json.dumps(tenant_networks_info)
+
+
+@admin.route('/tenant/networks/<project_id>')
+@auth_is_available
+def get_tenant_routers(project_id):
+    """获取租户的资源路由器"""
+    token = json.loads(request.args.get('token'))
+    tenant_routers_info = get_tenant_routers_info(token["id"], project_id)
+    return json.dumps(tenant_routers_info)
