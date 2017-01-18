@@ -70,6 +70,15 @@ def delete_tenant_data(tenant_id):
     return status
 
 
+@admin.route('/delete/tenant_list', methods=['POST'])
+@auth_is_available
+def create_tenant_list_data():
+    token = json.loads(request.args.get('token'))
+    tenant_json = request.json
+    delete_tanant_list_status = delete_tanant_list(token["id"], json.dumps(tenant_json))
+    return json.dumps(delete_tanant_list_status)
+
+
 @admin.route('/update/tenant/<tenant_id>', methods=['POST'])
 @auth_is_available
 def update_tenant_data(tenant_id):
@@ -122,3 +131,10 @@ def update_user_data(user_id):
     return json.dumps(new_user_json)
 
 
+@admin.route('/instance_abstract')
+@auth_is_available
+def get_instance_usage_abstract():
+    """获取物理主机的信息"""
+    token = json.loads(request.args.get('token'))
+    instances_info = get_all_tenant_instances(token["id"], token["tenant"]["id"])
+    return json.dumps(instances_info)
