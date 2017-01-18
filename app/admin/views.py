@@ -67,7 +67,7 @@ def create_tenant_data():
 def delete_tenant_data(tenant_id):
     token = json.loads(request.args.get('token'))
     status = delete_tenant(token["id"], tenant_id)
-    return status
+    return json.dumps(status)
 
 
 @admin.route('/delete/tenant_list', methods=['POST'])
@@ -75,7 +75,9 @@ def delete_tenant_data(tenant_id):
 def create_tenant_list_data():
     token = json.loads(request.args.get('token'))
     tenant_json = request.json
-    delete_tanant_list_status = delete_tanant_list(token["id"], json.dumps(tenant_json))
+    print json.dumps(tenant_json)
+    print token["id"]
+    delete_tanant_list_status = delete_tanant_list(token["id"], tenant_json)
     return json.dumps(delete_tanant_list_status)
 
 
@@ -167,7 +169,7 @@ def get_tenant_networks(project_id):
     return json.dumps(tenant_networks_info)
 
 
-@admin.route('/tenant/networks/<project_id>')
+@admin.route('/tenant/routers/<project_id>')
 @auth_is_available
 def get_tenant_routers(project_id):
     """获取租户的资源路由器"""
