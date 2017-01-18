@@ -4,6 +4,13 @@ from . import monitor
 from osapi import *
 
 
+@monitor.route('/top_tenant/<curr_type>')
+@auth_is_available
+def get_top_tenant_data(curr_type):
+    r = get_top_tenant(curr_type)
+    return json.dumps(r)
+
+
 @monitor.route('/<tenant_id>/tenant_top_instance/<curr_type>')
 @auth_is_available
 def get_tenant_top_instance_data(tenant_id, curr_type):

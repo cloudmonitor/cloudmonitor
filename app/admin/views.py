@@ -39,7 +39,7 @@ def hypervisor():
 @admin.route('/all_instances')
 @auth_is_available
 def get_all_instances_data():
-    """获取物理主机的信息"""
+    """获取所有云主机的信息"""
     token = json.loads(request.args.get('token'))
     instances_info = get_all_tenant_instances(token["id"], token["tenant"]["id"])
     return json.dumps(instances_info)
@@ -72,10 +72,10 @@ def delete_tenant_data(tenant_id):
 
 @admin.route('/delete/tenant_list', methods=['POST'])
 @auth_is_available
-def create_tenant_list_data():
+def delete_tenant_list_data():
     token = json.loads(request.args.get('token'))
-    tenant_json = request.json
-    delete_tanant_list_status = delete_tanant_list(token["id"], tenant_json)
+    tenant_list_id = request.json
+    delete_tanant_list_status = delete_tanant_list(token["id"], tenant_list_id)
     return json.dumps(delete_tanant_list_status)
 
 
@@ -91,6 +91,7 @@ def update_tenant_data(tenant_id):
 @admin.route('/update/tenant/<tenant_id>/quota', methods=['POST'])
 @auth_is_available
 def update_tenant_quota_data(tenant_id):
+    """更新用户配额"""
     token = json.loads(request.args.get('token'))
     quota_json = request.json
     new_quota_json = update_tenant_quota(token["id"], token["tenant"]["id"], tenant_id, json.dumps(quota_json))
@@ -100,6 +101,7 @@ def update_tenant_quota_data(tenant_id):
 @admin.route('/users')
 @auth_is_available
 def get_all_users_data():
+    """获取所有用户"""
     token = json.loads(request.args.get('token'))
     users_json = get_all_users(token['id'])
     return json.dumps(users_json)
@@ -108,6 +110,7 @@ def get_all_users_data():
 @admin.route('/create/user', methods=['POST'])
 @auth_is_available
 def create_user_data():
+    """创建用户"""
     token = json.loads(request.args.get('token'))
     user_json = request.json
     create_user_json = create_user(token["id"], json.dumps(user_json))
@@ -117,9 +120,19 @@ def create_user_data():
 @admin.route('/delete/user/<user_id>')
 @auth_is_available
 def delete_user_data(user_id):
+    """删除指定用户"""
     token = json.loads(request.args.get('token'))
     status = delete_user(token["id"], user_id)
-    return status
+    return json.dumps(status)
+
+
+@admin.route('/delete/user_list', methods=['POST'])
+@auth_is_available
+def delete_user_list_data():
+    token = json.loads(request.args.get('token'))
+    user_id_list = request.json
+    delete_user_list_status = delete_user_list(token["id"], user_id_list)
+    return json.dumps(delete_user_list_status)
 
 
 @admin.route('/update/user/<user_id>', methods=['POST'])
@@ -129,6 +142,24 @@ def update_user_data(user_id):
     user_json = request.json
     new_user_json = update_user(token["id"], user_id, json.dumps(user_json))
     return json.dumps(new_user_json)
+
+
+@admin.route('/roles')
+@auth_is_available
+def get_all_roles_data():
+    """获取所有的角色"""
+    token = json.loads(request.args.get('token'))
+    roles_json = get_all_roles(token['id'])
+    return json.dumps(roles_json)
+
+
+@admin.route('/tenants/<tenant_id>/users/<user_id>/roles/<role_id>')
+@auth_is_available
+def grant_tenant_user_role_data(tenant_id, user_id, role_id):
+    """获取所有的角色"""
+    token = json.loads(request.args.get('token'))
+    roles_json = grant_tenant_user_role(token['id'], tenant_id, user_id, role_id)
+    return json.dumps(roles_json)
 
 
 @admin.route('/instance_abstract')
