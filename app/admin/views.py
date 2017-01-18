@@ -75,8 +75,6 @@ def delete_tenant_data(tenant_id):
 def create_tenant_list_data():
     token = json.loads(request.args.get('token'))
     tenant_json = request.json
-    print json.dumps(tenant_json)
-    print token["id"]
     delete_tanant_list_status = delete_tanant_list(token["id"], tenant_json)
     return json.dumps(delete_tanant_list_status)
 
