@@ -107,6 +107,15 @@ def get_all_users_data():
     return json.dumps(users_json)
 
 
+@admin.route('/tenants/<tenant_id>/users')
+@auth_is_available
+def grant_tenant_users_data(tenant_id):
+    """授权租户的所有用户"""
+    token = json.loads(request.args.get('token'))
+    users_json = get_tenant_users(token['id'], tenant_id)
+    return json.dumps(users_json)
+
+
 @admin.route('/create/user', methods=['POST'])
 @auth_is_available
 def create_user_data():
@@ -153,36 +162,36 @@ def get_all_roles_data():
     return json.dumps(roles_json)
 
 
+@admin.route('/tenants/<tenant_id>/users/<user_id>/roles')
+@auth_is_available
+def get_tenant_user_roles_data(tenant_id, user_id):
+    """获取租户某一用户的角色"""
+    token = json.loads(request.args.get('token'))
+    roles_json = get_tenant_user_role(token['id'], tenant_id, user_id)
+    return json.dumps(roles_json)
+
+
 @admin.route('/tenants/<tenant_id>/users/<user_id>/roles/<role_id>')
 @auth_is_available
 def grant_tenant_user_role_data(tenant_id, user_id, role_id):
-    """获取所有的角色"""
+    """授权租户某一用户指定角色"""
     token = json.loads(request.args.get('token'))
     roles_json = grant_tenant_user_role(token['id'], tenant_id, user_id, role_id)
     return json.dumps(roles_json)
 
 
-@admin.route('/instance_abstract')
-@auth_is_available
-def get_instance_usage_abstract():
-    """获取物理主机的信息"""
-    token = json.loads(request.args.get('token'))
-    instances_info = get_all_tenant_instances(token["id"], token["tenant"]["id"])
-    return json.dumps(instances_info)
-
-
 @admin.route('/tenant/usage_abstract/<project_id>')
 @auth_is_available
-def get_tenant_usage_abstract(project_id):
+def get_tenant_usage_abstract_data(project_id):
     """获取租户的资源使用摘要"""
     token = json.loads(request.args.get('token'))
-    tenant_usage_info = get_tenant_usage_abstart(token["id"], token["tenant"]["id"], project_id)
+    tenant_usage_info = get_tenant_usage_abstract(token["id"], token["tenant"]["id"], project_id)
     return json.dumps(tenant_usage_info)
 
 
 @admin.route('/tenant/instances/<project_id>')
 @auth_is_available
-def get_tenant_instances(project_id):
+def get_tenant_instances_data(project_id):
     """获取租户下虚拟机的基本情况"""
     token = json.loads(request.args.get('token'))
     tenant_instanes_info = get_tenant_instances(token["id"], token["tenant"]["id"], project_id)
@@ -191,7 +200,7 @@ def get_tenant_instances(project_id):
 
 @admin.route('/tenant/networks/<project_id>')
 @auth_is_available
-def get_tenant_networks(project_id):
+def get_tenant_networks_data(project_id):
     """获取租户下网络基本情况"""
     token = json.loads(request.args.get('token'))
     tenant_networks_info = get_tenant_networks(token["id"], project_id)
@@ -200,8 +209,8 @@ def get_tenant_networks(project_id):
 
 @admin.route('/tenant/routers/<project_id>')
 @auth_is_available
-def get_tenant_routers(project_id):
+def get_tenant_routers_data(project_id):
     """获取租户的资源路由器"""
     token = json.loads(request.args.get('token'))
-    tenant_routers_info = get_tenant_routers_info(token["id"], project_id)
+    tenant_routers_info = get_tenant_routers(token["id"], project_id)
     return json.dumps(tenant_routers_info)
