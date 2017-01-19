@@ -240,5 +240,5 @@ def get_tenant_networks_data(project_id):
 def get_tenant_routers_data(project_id):
     """获取租户的资源路由器"""
     token = json.loads(request.args.get('token'))
-    tenant_routers_info = get_tenant_routers(token["id"], project_id)
+    tenant_routers_info = get_tenant_routers_info(token["id"], project_id)
     return json.dumps(tenant_routers_info)
