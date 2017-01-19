@@ -88,13 +88,41 @@ def update_tenant_data(tenant_id):
     return json.dumps(new_tenant_json)
 
 
-@admin.route('/update/tenant/<tenant_id>/quota', methods=['POST'])
+@admin.route('/tenant/<tenant_id>/basic_quota')
 @auth_is_available
-def update_tenant_quota_data(tenant_id):
+def get_tenant_basic_quota_data(tenant_id):
     """更新用户配额"""
     token = json.loads(request.args.get('token'))
+    quota_json = get_tenant_basic_quota(token["id"], token["tenant"]["id"], tenant_id)
+    return json.dumps(quota_json)
+
+
+@admin.route('/update/tenant/<tenant_id>/basic_quota', methods=['POST'])
+@auth_is_available
+def update_tenant_basic_quota_data(tenant_id):
+    """更新用户基本配额"""
+    token = json.loads(request.args.get('token'))
     quota_json = request.json
-    new_quota_json = update_tenant_quota(token["id"], token["tenant"]["id"], tenant_id, json.dumps(quota_json))
+    new_quota_json = update_tenant_basic_quota(token["id"], token["tenant"]["id"], tenant_id, json.dumps(quota_json))
+    return json.dumps(new_quota_json)
+
+
+@admin.route('/tenant/<tenant_id>/neutron_quota')
+@auth_is_available
+def get_tenant_neutron_quota_data(tenant_id):
+    """获取用户网络相关配额"""
+    token = json.loads(request.args.get('token'))
+    quota_json = get_tenant_neutron_quota(token["id"], token["tenant"]["id"], tenant_id)
+    return json.dumps(quota_json)
+
+
+@admin.route('/update/tenant/<tenant_id>/neutron_quota', methods=['POST'])
+@auth_is_available
+def update_tenant_neutron_quota_data(tenant_id):
+    """更新用户网络相关配额"""
+    token = json.loads(request.args.get('token'))
+    quota_json = request.json
+    new_quota_json = update_tenant_neutron_quota(token["id"], token["tenant"]["id"], tenant_id, json.dumps(quota_json))
     return json.dumps(new_quota_json)
 
 
