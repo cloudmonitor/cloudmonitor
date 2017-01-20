@@ -23,11 +23,12 @@ def abstract():
     token = json.loads(request.args.get('token'))
     start_time = request.args.get('start_time')
     end_time = request.args.get('end_time')
-    print request.args
-    print json.dumps(token)
-    print start_time
-    print end_time
-    abstract_info = get_tenant_usage(token["id"], start_time, end_time, token["tenant"]["id"])
+    # print request.args
+    # print json.dumps(token)
+    # print start_time
+    # print end_time
+    abstract_info = get_abstarct_info(token["id"], start_time, end_time, token["tenant"]["id"])
+    print json.dumps(abstract_info)
     return json.dumps(abstract_info)
 
 
