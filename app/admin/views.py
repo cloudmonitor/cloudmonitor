@@ -119,7 +119,7 @@ def update_tenant_basic_quota_data(tenant_id):
 def get_tenant_neutron_quota_data(tenant_id):
     """获取用户网络相关配额"""
     token = json.loads(request.args.get('token'))
-    quota_json = get_tenant_neutron_quota(token["id"], token["tenant"]["id"], tenant_id)
+    quota_json = get_tenant_neutron_quota(token["id"], tenant_id)
     return json.dumps(quota_json)
 
 
@@ -129,7 +129,7 @@ def update_tenant_neutron_quota_data(tenant_id):
     """更新用户网络相关配额"""
     token = json.loads(request.args.get('token'))
     quota_json = request.json
-    new_quota_json = update_tenant_neutron_quota(token["id"], token["tenant"]["id"], tenant_id, json.dumps(quota_json))
+    new_quota_json = update_tenant_neutron_quota(token["id"], tenant_id, json.dumps(quota_json))
     return json.dumps(new_quota_json)
 
 
@@ -144,8 +144,8 @@ def get_all_users_data():
 
 @admin.route('/tenants/<tenant_id>/users')
 @auth_is_available
-def grant_tenant_users_data(tenant_id):
-    """授权租户的所有用户"""
+def get_tenant_users_data(tenant_id):
+    """获取租户的所有用户"""
     token = json.loads(request.args.get('token'))
     users_json = get_tenant_users(token['id'], tenant_id)
     return json.dumps(users_json)
