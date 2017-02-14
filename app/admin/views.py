@@ -157,7 +157,7 @@ def create_user_data():
     """创建用户"""
     token = json.loads(request.args.get('token'))
     user_json = request.json
-    create_user_json = create_user(token["id"], json.dumps(user_json))
+    create_user_json = create_user_with_tenant_user_role(token["id"], json.dumps(user_json))
     return json.dumps(create_user_json)
 
 
@@ -212,6 +212,24 @@ def grant_tenant_user_role_data(tenant_id, user_id, role_id):
     """授权租户某一用户指定角色"""
     token = json.loads(request.args.get('token'))
     roles_json = grant_tenant_user_role(token['id'], tenant_id, user_id, role_id)
+    return json.dumps(roles_json)
+
+
+@admin.route('/add/tenants/<tenant_id>/users/<user_id>')
+@auth_is_available
+def add_tenant_user_data(tenant_id, user_id):
+    """给租户增加一个普通用户"""
+    token = json.loads(request.args.get('token'))
+    roles_json = add_tenant_user(token['id'], tenant_id, user_id)
+    return json.dumps(roles_json)
+
+
+@admin.route('/del/tenants/<tenant_id>/users/<user_id>')
+@auth_is_available
+def del_tenant_user_data(tenant_id, user_id):
+    """给租户增加一个普通用户"""
+    token = json.loads(request.args.get('token'))
+    roles_json = del_tenant_user(token['id'], tenant_id, user_id)
     return json.dumps(roles_json)
 
 
