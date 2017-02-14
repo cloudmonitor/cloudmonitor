@@ -249,3 +249,13 @@ def get_tenant_routers_data(project_id):
     token = json.loads(request.args.get('token'))
     tenant_routers_info = get_tenant_routers_info(token["id"], project_id)
     return json.dumps(tenant_routers_info)
+
+
+@admin.route('/create_image/<server_id>', methods=['POST'])
+@auth_is_available
+def create_image(server_id):
+    """根据虚拟机id创建快照"""
+    token = json.loads(request.args.get('token'))
+    tenant_json = request.json
+    new_tenant_json = create_image(token["id"],  token["tenant"]["id"], server_id, json.dumps(tenant_json))
+    return json.dumps(new_tenant_json)
