@@ -253,9 +253,39 @@ def get_tenant_routers_data(project_id):
 
 @admin.route('/create_image/<server_id>', methods=['POST'])
 @auth_is_available
-def create_image(server_id):
+def admin_create_image_info(server_id):
     """根据虚拟机id创建快照"""
     token = json.loads(request.args.get('token'))
     tenant_json = request.json
-    new_tenant_json = create_image(token["id"],  token["tenant"]["id"], server_id, json.dumps(tenant_json))
-    return json.dumps(new_tenant_json)
+    status_code = admin_create_image(token["id"],  token["tenant"]["id"], server_id, json.dumps(tenant_json))
+    return json.dumps(status_code)
+
+
+@admin.route('/get_vnc/<server_id>', methods=['POST'])
+@auth_is_available
+def admin_get_vnc_info(server_id):
+    """根据虚拟机id获取控制台的url"""
+    token = json.loads(request.args.get('token'))
+    tenant_json = request.json
+    status_code = admin_get_instance_vnc(token["id"],  token["tenant"]["id"], server_id, json.dumps(tenant_json))
+    return json.dumps(status_code)
+
+
+@admin.route('/admin_reboot/<server_id>', methods=['POST'])
+@auth_is_available
+def admin_reboot_instance_info(server_id):
+    """根据虚拟机id软重启和硬重启虚拟机"""
+    token = json.loads(request.args.get('token'))
+    tenant_json = request.json
+    status_code = admin_reboot_instance(token["id"],  token["tenant"]["id"], server_id, json.dumps(tenant_json))
+    return json.dumps(status_code)
+
+
+@admin.route('/admin_delete', methods=['POST'])
+@auth_is_available
+def admin_delete_instance_info():
+    """根据虚拟机的id列表来终止虚拟机"""
+    token = json.loads(request.args.get('token'))
+    tenant_json = request.json
+    status_code = admin_delete_servers(token["id"],  token["tenant"]["id"], json.dumps(tenant_json))
+    return json.dumps(status_code)
