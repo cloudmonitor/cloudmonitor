@@ -7,6 +7,14 @@ from osapi.admin import *
 
 from . import admin
 
+from werkzeug.utils import secure_filename
+from flask import Flask, render_template, jsonify
+import time
+import os
+import base64
+
+
+
 
 @admin.route('/login', methods=['POST'])
 def login():
@@ -307,3 +315,43 @@ def admin_delete_instance_info():
     tenant_json = request.json
     status_code = admin_delete_servers(token["id"],  token["tenant"]["id"], json.dumps(tenant_json))
     return json.dumps(status_code)
+
+
+@admin.route('/admin_create_image', methods=['POST'])
+@auth_is_available
+def admin_image_info():
+    """管理员创建镜像"""
+    UPLOAD_FOLDER = 'upload'
+    basedir = os.path.abspath('..//..//..')  # 获取项目的根目录
+    file_dir = os.path.join(basedir, UPLOAD_FOLDER)  # 在当前项目路径下创建upload目录
+    if not os.path.exists(file_dir):
+        os.mkdir(file_dir)
+    f = request.files['myfile']  # 从表单的file字段获取文件，myfile为该表达式的name值
+    file_name = ""
+    if f and allowed_file(f.filename):
+        file_name = secure_filename(f.filename)
+        f.save(os.path.join(file_dir, file_name))
+    token = json.loads(request.args.get('token'))
+    tenant_json = request.json
+    status_code = create_image(token["id"], json.dumps(tenant_json), file_name)
+    return status_code
+
+
+@admin.route('/admin_update/image/<image_id>', methods=['POST'])
+@auth_is_available
+def admin_update_image_info(image_id):
+    """更新镜像"""
+    token = json.loads(request.args.get('token'))
+    tenant_json = request.json
+    image_info = update_image(token["id"], image_id, json.dumps(tenant_json))
+    return json.dumps(image_info)
+
+
+@admin.route('/admin_delete/image', methods=['POST'])
+@auth_is_available
+def admin_delete_image_info():
+    """删除镜像"""
+    token = json.loads(request.args.get('token'))
+    image_json = request.json
+    status_info = delete_image(token["id"], json.dumps(image_json))
+    return json.dumps(status_info)
