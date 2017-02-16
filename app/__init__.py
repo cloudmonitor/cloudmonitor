@@ -18,7 +18,7 @@ def create_app():
     # app.config["SECRET_KEY"] = "try to guess"
     # login_manager.init_app(app)
     cors.init_app(app)
-
+    app.config["UPLOAD_FOLDER"] = "upload/"
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
 
