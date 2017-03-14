@@ -4,10 +4,66 @@ from . import monitor
 from osapi import *
 
 
-@monitor.route('/top_tenant/<curr_type>')
+@monitor.route('/cloud_top_tenant/<curr_type>')
 @auth_is_available
-def get_top_tenant_data(curr_type):
-    r = get_top_tenant(curr_type)
+def get_cloud_top_tenant_data(curr_type):
+    r = get_cloud_top_tenant(curr_type)
+    return json.dumps(r)
+
+
+@monitor.route('/cloud_top_instance/<curr_type>')
+@auth_is_available
+def get_cloud_top_instance_data(curr_type):
+    r = get_cloud_top_instance(curr_type)
+    return json.dumps(r)
+
+
+@monitor.route('/cloud_top_protocol_port/<curr_type>')
+@auth_is_available
+def get_cloud_top_protocol_port_data(curr_type):
+    r = get_cloud_top_protocol_port(curr_type)
+    return json.dumps(r)
+
+
+@monitor.route('/cloud_top_ip_link/<curr_type>')
+@auth_is_available
+def get_cloud_top_ip_link_data(curr_type):
+    r = get_cloud_top_ip_link(curr_type)
+    return json.dumps(r)
+
+
+@monitor.route('/cloud_top_src_ip/<curr_type>')
+@auth_is_available
+def get_cloud_top_src_ip_data(curr_type):
+    r = get_cloud_top_src_ip(curr_type)
+    return json.dumps(r)
+
+
+@monitor.route('/cloud_top_dst_ip/<curr_type>')
+@auth_is_available
+def get_cloud_top_dst_ip_data(curr_type):
+    r = get_cloud_top_dst_ip(curr_type)
+    return json.dumps(r)
+
+
+@monitor.route('/cloud_top_src_port/<curr_type>')
+@auth_is_available
+def get_cloud_top_src_port_data(curr_type):
+    r = get_cloud_top_src_port(curr_type)
+    return json.dumps(r)
+
+
+@monitor.route('/cloud_top_dst_port/<curr_type>')
+@auth_is_available
+def get_cloud_top_dst_port_data(curr_type):
+    r = get_cloud_top_dst_port(curr_type)
+    return json.dumps(r)
+
+
+@monitor.route('/cloud_top_session/<curr_type>')
+@auth_is_available
+def get_cloud_top_session_data(curr_type):
+    r = get_cloud_top_session(curr_type)
     return json.dumps(r)
 
 
@@ -18,17 +74,10 @@ def get_tenant_top_instance_data(tenant_id, curr_type):
     return json.dumps(r)
 
 
-@monitor.route('/<tenant_id>/tenant_top_protocol/<curr_type>')
+@monitor.route('/<tenant_id>/tenant_top_protocol_port/<curr_type>')
 @auth_is_available
-def get_tenant_top_protocol_data(tenant_id, curr_type):
-    r = get_tenant_top_protocol(tenant_id, curr_type)
-    return json.dumps(r)
-
-
-@monitor.route('/<tenant_id>/tenant_top_ip/<curr_type>')
-@auth_is_available
-def get_tenant_top_ip_data(tenant_id, curr_type):
-    r = get_tenant_top_ip(tenant_id, curr_type)
+def get_tenant_top_protocol_port_data(tenant_id, curr_type):
+    r = get_tenant_top_protocol_port(tenant_id, curr_type)
     return json.dumps(r)
 
 
@@ -39,17 +88,31 @@ def get_tenant_top_ip_link_data(tenant_id, curr_type):
     return json.dumps(r)
 
 
-@monitor.route('/<tenant_id>/tenant_top_port/<curr_type>')
+@monitor.route('/<tenant_id>/tenant_top_src_ip/<curr_type>')
 @auth_is_available
-def get_tenant_top_port_data(tenant_id, curr_type):
-    r = get_tenant_top_port(tenant_id, curr_type)
+def get_tenant_top_src_ip_data(tenant_id, curr_type):
+    r = get_tenant_top_src_ip(tenant_id, curr_type)
     return json.dumps(r)
 
 
-@monitor.route('/<tenant_id>/tenant_top_protocol_port/<curr_type>')
+@monitor.route('/<tenant_id>/tenant_top_dst_ip/<curr_type>')
 @auth_is_available
-def get_tenant_top_protocol_port_data(tenant_id, curr_type):
-    r = get_tenant_top_protocol_port(tenant_id, curr_type)
+def get_tenant_top_dst_ip_data(tenant_id, curr_type):
+    r = get_tenant_top_dst_ip(tenant_id, curr_type)
+    return json.dumps(r)
+
+
+@monitor.route('/<tenant_id>/tenant_top_src_port/<curr_type>')
+@auth_is_available
+def get_tenant_top_src_port_data(tenant_id, curr_type):
+    r = get_tenant_top_src_port(tenant_id, curr_type)
+    return json.dumps(r)
+
+
+@monitor.route('/<tenant_id>/tenant_top_dst_port/<curr_type>')
+@auth_is_available
+def get_tenant_top_dst_port_data(tenant_id, curr_type):
+    r = get_tenant_top_dst_port(tenant_id, curr_type)
     return json.dumps(r)
 
 
@@ -90,13 +153,6 @@ def get_instance_top_ip_link_data(tenant_id, instance_id, curr_type):
     return json.dumps(r)
 
 
-@monitor.route('/<tenant_id>/<instance_id>/instance_top_session/<curr_type>')
-@auth_is_available
-def get_instance_top_session_data(tenant_id, instance_id, curr_type):
-    r = get_instance_top_session(tenant_id, instance_id, curr_type)
-    return json.dumps(r)
-
-
 @monitor.route('/<tenant_id>/<instance_id>/instance_top_src_ip/<curr_type>')
 @auth_is_available
 def get_instance_top_src_ip_data(tenant_id, instance_id, curr_type):
@@ -124,6 +180,12 @@ def get_instance_top_dst_port_data(tenant_id, instance_id, curr_type):
     r = get_instance_top_dst_port(tenant_id, instance_id, curr_type)
     return json.dumps(r)
 
+
+@monitor.route('/<tenant_id>/<instance_id>/instance_top_session/<curr_type>')
+@auth_is_available
+def get_instance_top_session_data(tenant_id, instance_id, curr_type):
+    r = get_instance_top_session(tenant_id, instance_id, curr_type)
+    return json.dumps(r)
 
 
 
